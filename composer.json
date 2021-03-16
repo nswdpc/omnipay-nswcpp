@@ -1,0 +1,47 @@
+{
+    "name": "nswdpc/omnipay-nswcpp",
+    "type": "library",
+    "description": "Omnipay gateway for the New South Wales Government Customer Payment Platform",
+    "homepage": "https://github.com/nswdpc/omnipay-nswcpp",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "nsw",
+        "dpc",
+        "omnipay",
+        "php",
+        "pay",
+        "bpay",
+        "payid",
+        "new south wales",
+        "nsw government"
+    ],
+    "authors": [
+        {
+            "name": "James Ellis",
+            "homepage": "https://dpc.nsw.gov.au",
+            "email": "digital@dpc.nsw.gov.au"
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "NSWDPC\\Payments\\CPP" : "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.1",
+        "ext-json": "*",
+        "firebase/php-jwt" : "^5",
+        "omnipay/common": "^3"
+    },
+    "require-dev": {
+        "omnipay/tests": "^3",
+        "phpunit/phpunit": "^5.7 | ^7 | ^8 | ^9",
+        "squizlabs/php_codesniffer": "^3.0",
+        "friendsofphp/php-cs-fixer": "^2.18"
+    },
+    "minimum-stability": "stable",
+    "config" : {
+        "sort-packages": true
+    }
+}
