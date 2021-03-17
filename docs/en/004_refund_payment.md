@@ -20,14 +20,14 @@ If you are using the Silverstripe CPP module provided by NSWDPC Digital, this ca
 
 ```php
 use Omnipay\Omnipay;
-use NSWDPC\Payments\CPP\Gateway;
-use NSWDPC\Payments\CPP\AccessTokenRequestException;
-use NSWDPC\Payments\CPP\RefundRequestException;
+use OmniPay\NSWGOVCPP\Gateway;
+use OmniPay\NSWGOVCPP\Exception\AccessTokenRequestException;
+use OmniPay\NSWGOVCPP\Exception\RefundRequestException;
 
 try {
 
     // Setup CPP payment gateway
-    $gateway = Omnipay::create('NSWGOV CPP');
+    $gateway = Omnipay::create( Gateway::class );
 
     // You provide your client-id and client-secret
     $gateway->initialize([

@@ -24,8 +24,8 @@ In this example, your application has accepted the request and is verifying the 
 
 ```php
 use Omnipay\Omnipay;
-use NSWDPC\Payments\CPP\Gateway;
-use NSWDPC\Payments\CPP\CompletePurchaseRequestException;
+use OmniPay\NSWGOVCPP\Gateway;
+use OmniPay\NSWGOVCPP\Exception\CompletePurchaseRequestException;
 
 try {
 
@@ -38,7 +38,7 @@ try {
     $token = $myApp->getToken();// the JWT
 
     // Setup CPP payment gateway
-    $gateway = Omnipay::create('NSWGOV CPP');
+    $gateway = Omnipay::create( Gateway::class );
 
     // This process only validates the JWT
     $gateway->initialize([

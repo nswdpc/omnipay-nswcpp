@@ -1,9 +1,8 @@
 <?php
 
-namespace NSWDPC\Payments\CPP\Tests;
+namespace OmniPay\NSWGOVCPP\Tests;
 
-use NSWDPC\Utilities\Payments\Gateway;
-use NSWDPC\Utilities\Payments\GatewayFactory;
+use OmniPay\NSWGOVCPP\CustomerPaymentsPlatformGateway;
 use PHPUnit\Framework\TestCase;
 
 class GatewayTest extends TestCase {

@@ -1,6 +1,6 @@
 <?php
 
-namespace NSWDPC\Payments\CPP;
+namespace OmniPay\NSWGOVCPP\Exception;
 
 /**
  * Specific exception that can be thrown by an application and caught in

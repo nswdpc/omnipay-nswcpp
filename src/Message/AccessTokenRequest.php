@@ -1,5 +1,6 @@
 <?php
-namespace NSWDPC\Payments\CPP;
+
+namespace OmniPay\NSWGOVCPP\Message;
 
 use Omnipay\Common\Message\AbstractRequest;
 use Omnipay\Common\Message\ResponseInterface;

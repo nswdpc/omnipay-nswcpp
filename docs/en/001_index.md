@@ -17,17 +17,15 @@
 
 ## Gateway factory
 
-As a shortcut, you can create a NSWGOV CPP factory gateway quickly using your configuration values.
+As a shortcut, you can create a `OmniPay\NSWGOVCPP\Gateway` instance quickly using your configuration values and the `Factory` class:
 
 ```php
-use NSWDPC\Payments\CPP\GatewayFactory;
-
-use Omnipay\Omnipay;
+use OmniPay\NSWGOVCPP\Factory;
 
 /**
- * @var NSWDPC\Payments\CPP\Gateway
+ * @var OmniPay\NSWGOVCPP\Gateway
  */
-$gateway = GatewayFactory::create(
+$gateway = Factory::create(
     $clientId,
     $clientSecret,
     $jwtSecret,

@@ -1,6 +1,6 @@
 <?php
 
-namespace NSWDPC\Payments\CPP;
+namespace OmniPay\NSWGOVCPP\Exception;
 
 /**
  * Specific exception thrown when a purchase request cannot be completed

@@ -1,6 +1,6 @@
 <?php
 
-namespace NSWDPC\Payments\CPP;
+namespace OmniPay\NSWGOVCPP;
 
 use Omnipay\Omnipay;
 
@@ -9,7 +9,7 @@ use Omnipay\Omnipay;
  *
  * @author James
  */
-class GatewayFactory
+class Factory
 {
 
     /**
@@ -32,7 +32,7 @@ class GatewayFactory
         string $refundUrl // URL to enact refund requests
     ) : Gateway {
 
-        $gateway = Omnipay::create('NSWGOV CPP');
+        $gateway = Omnipay::create( CustomerPaymentsPlatformGateway::class );
         $gateway->initialize([
             'clientId' => $clientId,
             'clientSecret' => $clientSecret,

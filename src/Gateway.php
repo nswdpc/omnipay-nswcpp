@@ -1,12 +1,12 @@
 <?php
 
-namespace NSWDPC\Payments\CPP;
+namespace OmniPay\NSWGOVCPP;
 
 use Omnipay\Common\AbstractGateway;
-use NSWDPC\Payments\CPP\Message\AccessTokenRequest;
-use NSWDPC\Payments\CPP\Message\CompleteAccessTokenRequest;
-use NSWDPC\Payments\CPP\Message\CompletePurchaseRequest;
-use NSWDPC\Payments\CPP\Message\RefundRequest;
+use OmniPay\NSWGOVCPP\Message\AccessTokenRequest;
+use OmniPay\NSWGOVCPP\Message\CompleteAccessTokenRequest;
+use OmniPay\NSWGOVCPP\Message\CompletePurchaseRequest;
+use OmniPay\NSWGOVCPP\Message\RefundRequest;
 
 /**
  * Represents a gateway to handle communication with the CPP
@@ -17,7 +17,7 @@ class Gateway extends AbstractGateway
 {
 
     public function getName() {
-        return 'NSWGOV CPP';
+        return "NSWGOVCPP";
     }
 
     /**
