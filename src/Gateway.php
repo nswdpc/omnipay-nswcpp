@@ -1,12 +1,12 @@
 <?php
 
-namespace OmniPay\NSWGOVCPP;
+namespace Omnipay\NSWGOVCPP;
 
 use Omnipay\Common\AbstractGateway;
-use OmniPay\NSWGOVCPP\AccessTokenRequest;
-use OmniPay\NSWGOVCPP\CompleteAccessTokenRequest;
-use OmniPay\NSWGOVCPP\CompletePurchaseRequest;
-use OmniPay\NSWGOVCPP\RefundRequest;
+use Omnipay\NSWGOVCPP\AccessTokenRequest;
+use Omnipay\NSWGOVCPP\CompleteAccessTokenRequest;
+use Omnipay\NSWGOVCPP\CompletePurchaseRequest;
+use Omnipay\NSWGOVCPP\RefundRequest;
 
 /**
  * Represents a gateway to handle communication with the CPP

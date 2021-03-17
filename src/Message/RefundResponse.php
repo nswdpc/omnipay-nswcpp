@@ -1,8 +1,8 @@
 <?php
 
-namespace OmniPay\NSWGOVCPP;
+namespace Omnipay\NSWGOVCPP;
 
-use OmniPay\NSWGOVCPP\RefundRequestException;
+use Omnipay\NSWGOVCPP\RefundRequestException;
 use Omnipay\Common\Message\AbstractResponse;
 
 /**

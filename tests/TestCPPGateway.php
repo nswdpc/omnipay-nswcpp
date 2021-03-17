@@ -1,8 +1,8 @@
 <?php
 
-namespace OmniPay\NSWGOVCPP\Tests;
+namespace Omnipay\NSWGOVCPP\Tests;
 
-use OmniPay\NSWGOVCPP\CustomerPaymentsPlatformGateway;
+use Omnipay\NSWGOVCPP\CustomerPaymentsPlatformGateway;
 use PHPUnit\Framework\TestCase;
 
 /**

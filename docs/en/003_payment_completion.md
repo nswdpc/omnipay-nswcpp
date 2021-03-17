@@ -24,8 +24,8 @@ In this example, your application has accepted the request and is verifying the 
 
 ```php
 use Omnipay\Omnipay;
-use OmniPay\NSWGOVCPP\Gateway;
-use OmniPay\NSWGOVCPP\Exception\CompletePurchaseRequestException;
+use Omnipay\NSWGOVCPP\Gateway;
+use Omnipay\NSWGOVCPP\Exception\CompletePurchaseRequestException;
 
 try {
 

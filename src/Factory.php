@@ -1,6 +1,6 @@
 <?php
 
-namespace OmniPay\NSWGOVCPP;
+namespace Omnipay\NSWGOVCPP;
 
 use Omnipay\Omnipay;
 

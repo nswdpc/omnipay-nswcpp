@@ -20,9 +20,9 @@
 
 ```php
 use Omnipay\Omnipay;
-use OmniPay\NSWGOVCPP\Gateway;
-use OmniPay\NSWGOVCPP\Exception\AccessTokenRequestException;
-use OmniPay\NSWGOVCPP\Exception\CompleteAccessTokenRequestException;
+use Omnipay\NSWGOVCPP\Gateway;
+use Omnipay\NSWGOVCPP\Exception\AccessTokenRequestException;
+use Omnipay\NSWGOVCPP\Exception\CompleteAccessTokenRequestException;
 
 
 try {

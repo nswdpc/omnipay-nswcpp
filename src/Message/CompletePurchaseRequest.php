@@ -1,10 +1,10 @@
 <?php
 
-namespace OmniPay\NSWGOVCPP;
+namespace Omnipay\NSWGOVCPP;
 
 use Firebase\JWT\JWT;
-use OmniPay\NSWGOVCPP\CompletePurchaseRequestException;
-use OmniPay\NSWGOVCPP\UnprocessableEntityException;
+use Omnipay\NSWGOVCPP\CompletePurchaseRequestException;
+use Omnipay\NSWGOVCPP\UnprocessableEntityException;
 use Omnipay\Common\Message\AbstractRequest;
 use Omnipay\Common\Message\ResponseInterface;
 

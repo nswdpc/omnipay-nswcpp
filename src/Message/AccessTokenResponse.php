@@ -1,8 +1,8 @@
 <?php
 
-namespace OmniPay\NSWGOVCPP;
+namespace Omnipay\NSWGOVCPP;
 
-use OmniPay\NSWGOVCPP\AccessTokenRequestException;
+use Omnipay\NSWGOVCPP\AccessTokenRequestException;
 use Omnipay\Common\Message\AbstractResponse;
 
 /**
