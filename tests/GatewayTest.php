@@ -4,16 +4,16 @@ namespace OmniPay\NSWGOVCPP\Tests;
 
 use Omnipay\Tests\GatewayTestCase;
 use OmniPay\NSWGOVCPP\Gateway;
-use OmniPay\NSWGOVCPP\Exception\AccessTokenRequestException;
-use OmniPay\NSWGOVCPP\Exception\CompleteAccessTokenRequestException;
-use OmniPay\NSWGOVCPP\Exception\CompletePurchaseRequestException;
-use OmniPay\NSWGOVCPP\Exception\RefundRequestException;
-use OmniPay\NSWGOVCPP\Exception\PaymentCompletionException;
-use OmniPay\NSWGOVCPP\Exception\UnprocessableEntityException;
-use OmniPay\NSWGOVCPP\Message\AccessTokenRequest;
-use OmniPay\NSWGOVCPP\Message\CompleteAccessTokenRequest;
-use OmniPay\NSWGOVCPP\Message\CompletePurchaseRequest;
-use OmniPay\NSWGOVCPP\Message\RefundRequest;
+use OmniPay\NSWGOVCPP\AccessTokenRequestException;
+use OmniPay\NSWGOVCPP\CompleteAccessTokenRequestException;
+use OmniPay\NSWGOVCPP\CompletePurchaseRequestException;
+use OmniPay\NSWGOVCPP\RefundRequestException;
+use OmniPay\NSWGOVCPP\PaymentCompletionException;
+use OmniPay\NSWGOVCPP\UnprocessableEntityException;
+use OmniPay\NSWGOVCPP\AccessTokenRequest;
+use OmniPay\NSWGOVCPP\CompleteAccessTokenRequest;
+use OmniPay\NSWGOVCPP\CompletePurchaseRequest;
+use OmniPay\NSWGOVCPP\RefundRequest;
 
 class GatewayTest extends GatewayTestCase {
 
