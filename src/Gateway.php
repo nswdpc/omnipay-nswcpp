@@ -3,10 +3,10 @@
 namespace OmniPay\NSWGOVCPP;
 
 use Omnipay\Common\AbstractGateway;
-use OmniPay\NSWGOVCPP\Message\AccessTokenRequest;
-use OmniPay\NSWGOVCPP\Message\CompleteAccessTokenRequest;
-use OmniPay\NSWGOVCPP\Message\CompletePurchaseRequest;
-use OmniPay\NSWGOVCPP\Message\RefundRequest;
+use OmniPay\NSWGOVCPP\AccessTokenRequest;
+use OmniPay\NSWGOVCPP\CompleteAccessTokenRequest;
+use OmniPay\NSWGOVCPP\CompletePurchaseRequest;
+use OmniPay\NSWGOVCPP\RefundRequest;
 
 /**
  * Represents a gateway to handle communication with the CPP

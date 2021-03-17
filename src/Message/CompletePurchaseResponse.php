@@ -1,9 +1,9 @@
 <?php
 
-namespace OmniPay\NSWGOVCPP\Message;
+namespace OmniPay\NSWGOVCPP;
 
-use OmniPay\NSWGOVCPP\Exception\CompletePurchaseRequestException;
-use OmniPay\NSWGOVCPP\Exception\UnprocessableEntityException;
+use OmniPay\NSWGOVCPP\CompletePurchaseRequestException;
+use OmniPay\NSWGOVCPP\UnprocessableEntityException;
 use Omnipay\Common\Message\AbstractResponse;
 
 /**

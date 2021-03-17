@@ -1,9 +1,9 @@
 <?php
 
-namespace OmniPay\NSWGOVCPP\Message;
+namespace OmniPay\NSWGOVCPP;
 
-use Omnipay\Common\Message\AbstractRequest;
-use Omnipay\Common\Message\ResponseInterface;
+use Omnipay\Common\AbstractRequest;
+use Omnipay\Common\ResponseInterface;
 
 /**
  * Authorise request for the CPP
