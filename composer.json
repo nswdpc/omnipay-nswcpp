@@ -31,6 +31,8 @@
     "require": {
         "php": ">=7.1",
         "ext-json": "*",
+        "kriswallsmith/buzz": "^0.1",
+        "nyholm/psr7": "^1.4",
         "firebase/php-jwt" : "^5",
         "omnipay/common": "^3"
     },
