@@ -25,13 +25,11 @@
     ],
     "autoload": {
         "psr-4": {
-            "Omnipay\\NSWGOVCPP\\" : "src/",
-            "Omnipay\\NSWGOVCPP\\Message\\" : "src/Message",
-            "Omnipay\\NSWGOVCPP\\Exception\\" : "src/Exception"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
+            "Omnipay\\NSWGOVCPP\\" : [
+                "src/",
+                "src/Message/",
+                "src/Exception/"
+            ],
             "Omnipay\\NSWGOVCPP\\Tests\\": "tests/"
         }
     },
