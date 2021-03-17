@@ -6,7 +6,9 @@ More information for NSW Government agencies [can be found on the CPP resource p
 
 ### Silverstripe integration
 
-Installing the NSWPC Silverstripe CPP module will install this package. Please follow the configuration instructions in that module for Silverstripe setup.
+Installing the `nswdpc/silverstripe-nsw-customerpaymentsplatform` module will install this package, providing a NSW Government agency a frontend to take payments.
+
+Please follow the configuration instructions in that module for configuration and setup.
 
 ## Maintainers
 
