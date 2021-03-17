@@ -30,6 +30,11 @@
             "Omnipay\\NSWGOVCPP\\Exception\\" : "src/Exception"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Omnipay\\NSWGOVCPP\\Tests\\": "tests/"
+        }
+    },
     "require": {
         "php": ">=7.1",
         "ext-json": "*",
