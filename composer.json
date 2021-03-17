@@ -25,7 +25,9 @@
     ],
     "autoload": {
         "psr-4": {
-            "Omnipay\\NSWGOVCPP\\" : "src/"
+            "Omnipay\\NSWGOVCPP\\" : "src/",
+            "Omnipay\\NSWGOVCPP\\Message\\" : "src/Message",
+            "Omnipay\\NSWGOVCPP\\Exception\\" : "src/Exception"
         }
     },
     "require": {
