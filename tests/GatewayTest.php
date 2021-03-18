@@ -184,8 +184,12 @@ class GatewayTest extends GatewayTestCase {
         $this->assertInstanceOf(RedirectResponse::class, $redirectResponse);
         $this->assertEquals(Response::HTTP_FOUND, $redirectResponse->getStatusCode());
         $this->assertEquals($completeAccessTokenResponse->getRedirectUrl(), $redirectResponse->getTargetUrl());
+
+        // output buffering
+        ob_start();
         $redirectResult = $completeAccessTokenResponse->redirect();
-        $this->assertEmpty($redirectResult);
+        $contents = ob_get_contents();
+        ob_end_clean();
 
     }
 
@@ -214,7 +218,11 @@ class GatewayTest extends GatewayTestCase {
             return true;
         };
         $complete = $completePurchaseResponse->complete($callback);
-        $result = $complete->send();
+
+        ob_start();
+        $complete->send();
+        $contents = ob_get_contents();
+        ob_end_clean();
     }
 
     public function testDoRefund() {
