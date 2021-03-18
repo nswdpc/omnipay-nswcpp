@@ -3,7 +3,6 @@
 namespace Omnipay\NSWGOVCPP;
 
 use Omnipay\NSWGOVCPP\RefundRequestException;
-use Omnipay\Common\Message\AbstractRequest;
 use Omnipay\Common\Message\ResponseInterface;
 
 /**
@@ -11,45 +10,25 @@ use Omnipay\Common\Message\ResponseInterface;
  *
  * @author James
  */
-class RefundRequest extends AbstractRequest
+class RefundRequest extends AbstractAgencyRequest
 {
 
-    /**
-     * Whether the purchase reqest params were validate successfully
-     * @var boolean
-     */
-    protected $validated = false;
+    use GetterSetterParameterTrait;
 
+    public function setRefundAmount($amount) {
+        $this->setParameter('refundAmount', $amount);
+    }
 
-    /**
-     * Initialise the purchase request
-     */
-    public function initialize(array $parameters = array())
-    {
+    public function getRefundAmount() {
+        return $this->getParameter('refundAmount');
+    }
 
-        // valudate the URLs used
-        if(empty($parameters['endpointUrl'])) {
-            // TODO: validate the endpoint URL
-            throw new RefundRequestException("Invalid endpoint URL");
-        }
+    public function setRefundReason($reason) {
+        $this->setParameter('refundReason', $reason);
+    }
 
-        // validate the payload
-        if(empty($parameters['amount'])) {
-
-            throw new RefundRequestException("Empty refund amount");
-        }
-
-        if(empty($parameters['accessToken']) || !($parameters['accessToken'] instanceof AccessTokenResponse)) {
-            throw new RefundRequestException("Invalid access token");
-        }
-
-        if($parameters['accessToken']->isExpired()) {
-            throw new RefundRequestException("The access token has expired, request a new one", AccessTokenResponse::EXPIRED);
-        }
-
-        $this->validated = true;
-
-        return parent::initialize($parameters);
+    public function getRefundReason() {
+        return $this->getParameter('refundReason');
     }
 
     /**
@@ -58,31 +37,59 @@ class RefundRequest extends AbstractRequest
      */
      public function getData() : array {
          return [
-             'amount' => $this->parameters->get('amount'),
-             'refundReason' => $this->parameters->get('refundReason'),
+             'amount' => $this->getRefundAmount(),
+             'refundReason' => $this->getRefundReason()
          ];
      }
 
      /**
-      * Send access token request to the endpoint, handle the result
+      * To perform a refund, an access token is required
       * @param array $data
       * @throws RefundRequestException
       */
     public function sendData($data) : ResponseInterface {
 
-        if(!$this->validated) {
-            throw new RefundRequestException("You cannot call sendData() without validating the parameters.");
+        // validate the existence of the refund URL
+        $url = $this->getRefundUrl();
+        if(!$url) {
+            // TODO: validate the endpoint URL
+            throw new RefundRequestException("Invalid refundUrl");
         }
 
-        $response = $this->httpClient->post(
-            $this->endpointUrl,
-            [
-                'Authorization' => "Bearer " . $this->parameters->get('accessToken'),/* @var AccessTokenResponse */
+        // check for an empty payload data
+        if(empty($data)) {
+            throw new RefundRequestException("Empty refund request payload");
+        }
+
+        // verify amount is sensible, must be >=0
+        $amount = $data['amount'];
+        if(!is_float($amount) && !is_integer($amount) && $amount <= 0) {
+            throw new RefundRequestException("Invalid refund amount: {$amount}, " . gettype($amount));
+        }
+
+        // we required an Oauth2 access token
+        $accessToken = $this->getAccessToken();
+        if(!$accessToken instanceof Accesstoken) {
+            throw new RefundRequestException("Invalid access token for refund request");
+        }
+
+        if($accessToken->isExpired()) {
+            throw new RefundRequestException(
+                "The access token for the refund request is expired, request a new one",
+                AccessTokenResponse::EXPIRED
+            );
+        }
+
+        $result = $this->doPostRequest(
+            $url,
+            $headers = [
                 'Content-Type' => 'application/json',
+                'Authorization' => "Bearer " . $accessToken->getToken(),
             ],
             $data
-        )->send();
-        $response = new RefundResponse($this, $response->json());
+        );
+        $response = new RefundResponse($this, $result);
         return $response;
+
     }
 }

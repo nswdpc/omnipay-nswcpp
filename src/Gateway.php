@@ -16,6 +16,8 @@ use Omnipay\NSWGOVCPP\RefundRequest;
 class Gateway extends AbstractGateway
 {
 
+    use GetterSetterParameterTrait;
+
     public function getName() {
         return "NSWGOVCPP";
     }
@@ -25,19 +27,12 @@ class Gateway extends AbstractGateway
      */
     public function getDefaultParameters()
     {
-        return [
-            'clientId' => '',
-            'clientSecret' => '',
-            'jwtSecret' => '',
-            'accessTokenUrl' => '',
-            'requestPaymentUrl' => '',
-            'gatewayUrl' => '',
-            'refundUrl' => ''
-        ];
+        return ParameterStorage::getAll();
     }
 
     /**
      * Get an access token that can be used for purchase/void requests
+     * @return Omnipay\NSWGOVCPP\AccessTokenRequest
      */
     public function authorize(array $parameters = array())
     {
@@ -46,6 +41,8 @@ class Gateway extends AbstractGateway
 
     /**
      * Complete the authorisation process
+     * This sends the payment request to the endpoint along with the OAuth2 access token
+     * @return Omnipay\NSWGOVCPP\CompleteAccessTokenRequest
      */
     public function completeAuthorize(array $parameters = array())
     {
@@ -54,9 +51,8 @@ class Gateway extends AbstractGateway
 
     /**
      * Complete a purchase
-     * The gateway will POST the payment details together with a JWT token to verify
-     * the completion call is valid
-     * completePurchase only validates the JWT token
+     * The gateway will POST a JWT token that is decoded, containing the payment details
+     * @return Omnipay\NSWGOVCPP\CompletePurchaseRequest
      */
     public function completePurchase(array $parameters = array())
     {
@@ -65,6 +61,7 @@ class Gateway extends AbstractGateway
 
     /**
      * Refund a payment reference, using an access token
+     * @return Omnipay\NSWGOVCPP\RefundRequest
      */
     public function refund(array $parameters = array())
     {

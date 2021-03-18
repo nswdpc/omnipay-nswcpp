@@ -1,0 +1,16 @@
+{
+  "exp": 0,
+  "sub": "GPP-DIG-pJlBU1EnSBGdmxULq6a4mA",
+  "paymentMethod": "CARD",
+  "paymentReference": "GPP-DIG-pJlBU1EnSBGdmxULq6a4mA",
+  "paymentCompletionReference": "495RBWSHG2",
+  "bankReference": "1055634955",
+  "amount": 1156.56,
+  "surcharge": 462.62,
+  "surchargeGst": 46.26,
+  "agencyTransactionId": "c552b9e6-26c4-4bb5-9f1d-9c34ecd78597",
+  "card": {
+    "cardType": "VISA",
+    "last4Digits": "1111"
+  }
+}

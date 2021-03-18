@@ -15,38 +15,24 @@ class AccessTokenResponse extends AbstractResponse
     const EXPIRED = 'ACCESS_TOKEN_EXPIRED';
 
     /**
-     * Returns the access token in this response as a string
+     * Return the access token string, which is set from the result of an AccessTokenRequest
+     * @return string
      */
-    public function __toString() : string {
-        if($this->isSuccessful()) {
-            return $this->data['access_token'];
-        } else {
-            throw new AccessTokenRequestException("No valid access token");
-        }
-    }
-
-    /**
-     * Return whether this access token has expired
-     * @return boolean
-     */
-    public function isExpired() : boolean {
-        return false;
+    public function getAccessToken() {
+        $token = new AccessToken(
+            isset($this->data['access_token']) ? $this->data['access_token'] : '',
+            isset($this->data['expires']) ? $this->data['expires'] : '',
+            isset($this->data['token_type']) ? $this->data['token_type'] : ''
+        );
+        return $token;
     }
 
     /**
      * Return whether the {@link NSWDPC\Payments\CPP\AccessTokenRequest} was successful
      */
-    public function isSuccessful() : boolean {
-        return is_array($this->data)
-            && !empty($this->data['access_token'])
-            && (
-                isset($this->data['token_type'])
-                && $this->data['token_type'] == 'Bearer'
-            )
-            && (
-                isset($this->data['expires_in'])
-                && $this->data['expires_in'] > 0
-            );
+    public function isSuccessful() : bool {
+        $token = $this->getAccessToken();
+        return $token->isValid();
     }
 
 }

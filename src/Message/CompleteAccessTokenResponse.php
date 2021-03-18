@@ -5,12 +5,14 @@ namespace Omnipay\NSWGOVCPP;
 use Omnipay\NSWGOVCPP\CompleteAccessTokenRequestException;
 use Omnipay\Common\Exception\RuntimeException;
 use Omnipay\Common\Message\AbstractResponse;
+use Omnipay\Common\Message\RedirectResponseInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Represents a response to the CompleteAccessTokenRequest
  * @author James
  */
-class CompleteAccessTokenResponse extends AbstractResponse
+class CompleteAccessTokenResponse extends AbstractResponse implements RedirectResponseInterface
 {
 
     /**
@@ -27,14 +29,17 @@ class CompleteAccessTokenResponse extends AbstractResponse
     }
 
     /**
-     * Return whether the {@link NSWDPC\Payments\CPP\CompleteAccessTokenRequest} was successful
+     * Get paymentReference
      */
-    public function isSuccessful() : boolean {
-        return !empty($this->data['paymentReference']);
+    public function getPaymentReference() {
+        return isset($this->data['paymentReference']) ? $this->data['paymentReference'] : false;
     }
 
-    public function isRedirect() {
-        return true;
+    /**
+     * Return whether the {@link NSWDPC\Payments\CPP\CompleteAccessTokenRequest} was successful
+     */
+    public function isSuccessful() : bool {
+        return $this->getPaymentReference() !== false;
     }
 
     /**
@@ -45,14 +50,26 @@ class CompleteAccessTokenResponse extends AbstractResponse
     public function getRedirectUrl()
     {
         $url = "";
-        $paymentReference = $this->data['paymentReference'];
-        if($paymentReference) {
-            $url = $this->parameters->get('gatewayUrl');
+        $paymentReference = $this->getPaymentReference();
+        $gatewayUrl = $this->getRequest()->getGatewayUrl();
+        if($paymentReference && $gatewayUrl) {
+            $url = rtrim($gatewayUrl, "?");
+            $url .= "?";
             $url .= http_build_query([
                 'paymentReference' => $paymentReference
             ]);
         }
         return $url;
+    }
+
+    /**
+     * Does the response require a redirect?
+     *
+     * @return boolean
+     */
+    public function isRedirect()
+    {
+        return true;
     }
 
     /**
@@ -66,31 +83,27 @@ class CompleteAccessTokenResponse extends AbstractResponse
     }
 
     /**
-     * TODO: some checks and balances on the URL structure?
+     * Send a header to redirect the browser to the CPP gateway
+     * Helper method to call a redirect immedidately using header()
+     * @return void;
      */
-    protected function validateRedirect()
-    {
+    public function doRedirectToGateway() {
         $url = $this->getRedirectUrl();
-        if(!$url) {
-            throw new RuntimeException('This redirect URL is not valid.');
+        if($url) {
+            header("HTTP/1.1 302 Found");
+            header("Location: " . $url);
+            exit;
         }
-    }
-
-    public function getRedirectResponse() {
-        $this->validateRedirect();
-        $url = $this->getRedirectUrl();
-        header("Location: {$url}");
     }
 
     /**
-     * When the response is successful, redirect to the offsite gateway page
+     * @return RedirectResponse
      */
-    public function redirect() {
-        if(!$this->isSuccessful()) {
-            throw new CompleteAccessTokenRequestException("You cannot redirect when the request was not successful");
-        }
-        $this->getRedirectResponse();
-        exit;
+    public function getRedirectResponse()
+    {
+        $this->validateRedirect();
+        $headers = [];
+        return new RedirectResponse($this->getRedirectUrl(), 302, $headers);
     }
 
 }

@@ -3,7 +3,6 @@
 namespace Omnipay\NSWGOVCPP;
 
 use Omnipay\NSWGOVCPP\CompleteAccessTokenRequestException;
-use Omnipay\Common\Message\AbstractRequest;
 use Omnipay\Common\Message\ResponseInterface;
 
 /**
@@ -13,50 +12,18 @@ use Omnipay\Common\Message\ResponseInterface;
  * validate and redirect to the payment gateway
  * @author James
  */
-class CompleteAccessTokenRequest extends AbstractRequest
+class CompleteAccessTokenRequest extends AbstractAgencyRequest
 {
 
-    /**
-     * Whether the purchase reqest params were validate successfully
-     * @var boolean
-     */
-    protected $validated = false;
+    use GetterSetterParameterTrait;
 
+    public function setPayload(array $payload) {
+        $this->setParameter('payload', $payload);
+        return $this;
+    }
 
-    /**
-     * Initialise the purchase request
-     */
-    public function initialize(array $parameters = array())
-    {
-
-        // valudate the URLs used
-        if(empty($parameters['endpointUrl'])) {
-            // TODO: validate the endpoint URL
-            throw new CompleteAccessTokenRequestException("Invalid endpoint URL");
-        }
-        if(empty($parameters['gatewayUrl'])) {
-            // TODO: validate the gateway URL
-            throw new CompleteAccessTokenRequestException("Invalid payment gateway URL");
-        }
-
-        // validate the payload
-        if(empty($parameters['payload'])) {
-            throw new CompleteAccessTokenRequestException("Empty payment payload");
-        } else {
-            $this->validatePaymentPayload($parameters['payload']);
-        }
-
-        if(empty($parameters['accessToken']) || !($parameters['accessToken'] instanceof AccessTokenResponse)) {
-            throw new CompleteAccessTokenRequestException("Invalid access token");
-        }
-
-        if($parameters['accessToken']->isExpired()) {
-            throw new CompleteAccessTokenRequestException("The access token has expired, request a new one", AccessTokenResponse::EXPIRED);
-        }
-
-        $this->validated = true;
-
-        return parent::initialize($parameters);
+    public function getPayload() : array {
+        return $this->getParameter('payload');
     }
 
     /**
@@ -64,7 +31,7 @@ class CompleteAccessTokenRequest extends AbstractRequest
      * @TODO implement per payment method payload requests - single payment, disbursement, recurring
      * @throws CompleteAccessTokenRequestException
      */
-    public function validatePaymentPayload(array $payload) : boolean {
+    public function validatePaymentPayload(array $payload = []) : bool {
         return true;
     }
 
@@ -73,7 +40,8 @@ class CompleteAccessTokenRequest extends AbstractRequest
      * @return array
      */
      public function getData() : array {
-         $payload = $this->parameters->get('payload');
+         $payload = $this->getPayload();
+         $this->validatePaymentPayload();
          return $payload;
      }
 
@@ -84,21 +52,39 @@ class CompleteAccessTokenRequest extends AbstractRequest
       */
     public function sendData($data) : ResponseInterface {
 
-        if(!$this->validated) {
-            throw new CompleteAccessTokenRequestException("You cannot call sendData() without validating the parameters.");
+        // validate the existence of the payment request url
+        $url = $this->getRequestPaymentUrl();
+        if(!$url) {
+            // TODO: validate the endpoint URL
+            throw new CompleteAccessTokenRequestException("Invalid paymentRequestUrl");
         }
 
-        $response = $this->httpClient->post(
-            $this->endpointUrl,
-            [
-                'Authorization' => "Bearer " . $this->parameters->get('accessToken'),/* @var AccessTokenResponse */
+        // check for an empty payload data
+        if(empty($data)) {
+            throw new CompleteAccessTokenRequestException("Empty payment request payload");
+        }
+
+        $accessToken = $this->getAccessToken();
+        if(!($accessToken instanceof AccessToken)) {
+            throw new CompleteAccessTokenRequestException("Invalid access token");
+        }
+
+        if($accessToken->isExpired()) {
+            throw new CompleteAccessTokenRequestException(
+                "The access token has expired, request a new one",
+                AccessTokenResponse::EXPIRED
+            );
+        }
+
+        $result = $this->doPostRequest(
+            $url,
+            $headers = [
                 'Content-Type' => 'application/json',
+                'Authorization' => "Bearer " . $accessToken->getToken(),
             ],
             $data
-        )->send();
-
-        // create the purchase response
-        $response = new CompleteAccessTokenResponse($this, $response->json());
+        );
+        $response = new CompleteAccessTokenResponse($this, $result);
         return $response;
     }
 }

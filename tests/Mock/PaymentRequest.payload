@@ -1,0 +1,7 @@
+{
+    "productDescription": "A test product",
+    "amount": 118.00,
+    "customerReference" : "A test customer reference",
+    "agencyTransactionId": "3.14159",
+    "callingSystem": "CPP unit testing"
+}

@@ -2,8 +2,7 @@
 
 namespace Omnipay\NSWGOVCPP;
 
-use Omnipay\Common\AbstractRequest;
-use Omnipay\Common\ResponseInterface;
+use Omnipay\Common\Message\ResponseInterface;
 
 /**
  * Authorise request for the CPP
@@ -11,19 +10,23 @@ use Omnipay\Common\ResponseInterface;
  * Retrieves an access token from the endpoint, for use in purchase requests
  * @author James
  */
-class AccessTokenRequest extends AbstractRequest
+class AccessTokenRequest extends AbstractAgencyRequest
 {
+
+    use GetterSetterParameterTrait;
+
+    const OAUTH2_GRANT_CLIENT_CREDENTIALS = 'client_credentials';
 
     /**
      * Get payload data for the request
      * @return array
      */
      public function getData() : array {
-         $this->validate('client_id', 'client_secret');
+         $this->validate('clientId','clientSecret','accessTokenUrl');
          return [
-             'grant_type' => 'client_credentials',
-             'client_id' => $this->parameters->get('clientId'),
-             'client_secret' => $this->parameters->get('clientSecret'),
+             'grant_type' => self::OAUTH2_GRANT_CLIENT_CREDENTIALS,
+             'client_id' => $this->getParameter('clientId'),
+             'client_secret' => $this->getParameter('clientSecret'),
          ];
      }
 
@@ -43,15 +46,20 @@ class AccessTokenRequest extends AbstractRequest
     public function sendData($data) : ResponseInterface {
         $response = $this->getCurrentAccessToken();
         if(!$response || $response->isExpired()) {
+            $url = $this->getAccessTokenUrl();
+            if(!$url) {
+                throw new AccessTokenRequestException("The accessTokenUrl is invalid");
+            }
             // the token is set currently set or has expired
-            $tokenData = $this->httpClient->post(
-                $this->parameters->get('endpointUrl'),
-                [
+            $result = $this->doPostRequest(
+                $url,
+                $headers = [
                     'Content-Type' => 'application/json',
                 ],
                 $data
-            )->send();
-            $response = new AccessTokenResponse($this, $tokenData->json());
+            );
+            // result contains: access_token, expires, token_type
+            $response = new AccessTokenResponse($this, $result);
         }
         return $response;
     }

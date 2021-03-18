@@ -9,7 +9,7 @@ use Omnipay\Common\Message\AbstractResponse;
  * Represents a response to VoidRequest
  * @author James
  */
-class VoidResponse extends AbstractResponse
+class RefundResponse extends AbstractResponse
 {
 
     /**
@@ -24,10 +24,17 @@ class VoidResponse extends AbstractResponse
     }
 
     /**
-     * Return whether the {@link NSWDPC\Payments\CPP\VoidRequest} was successful
+     * Get refundReference
      */
-    public function isSuccessful() : boolean {
-        return !empty($this->data['refundReference']);
+    public function getRefundReference() {
+        return isset($this->data['refundReference']) ? $this->data['refundReference'] : false;
+    }
+
+    /**
+     * Return whether the {@link NSWDPC\Payments\CPP\RefundRequest} was successful
+     */
+    public function isSuccessful() : bool {
+        return $this->getRefundReference() !== false;
     }
 
 }
