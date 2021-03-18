@@ -20,37 +20,51 @@ See [CPPAgency Services](https://documenter.getpostman.com/view/7222098/SzfCSkTn
 
 ## Example
 
-In this example, your application has accepted the request and is verifying the incoming data.
+In this example, your application has accepted the payment completion HTTP request and is verifying the incoming data.
+
+The customer is awaiting the results of this verification at the gateway.
+
+Upon returning a `200 OK`, the customer will be redirected to your configured payment completion page.
 
 ```php
+
 use Omnipay\Omnipay;
+use Omnipay\NSWGOVCPP\CompletePurchaseResponse;
 use Omnipay\NSWGOVCPP\Gateway;
-use Omnipay\NSWGOVCPP\Exception\CompletePurchaseRequestException;
+use Omnipay\NSWGOVCPP\ParameterStorage;
+use Omnipay\NSWGOVCPP\CompletePurchaseRequestException;
+use Omnipay\NSWGOVCPP\UnprocessableEntityException;
 
 try {
 
-    /**
-     * Your application provides the following
-     * @var array $payload payload data received
-     * @var string $token JWT sent so agency (you) can verify request
-     */
+    $callback = function(CompletePurchaseResponse $response) {
+        /**
+         * process payment completion in your app
+         * the callback can:
+         * return true on success (resulting in a 200)
+         * return false on failure (resulting in a 503)
+         * or throw an UnprocessableEntityException to return a HTTP 422 to the CPP
+         */
+    };
 
-    $token = $myApp->getToken();// the JWT
+    // the CPP will POST a JWT to your controller
+    $jwt = $myApp->getToken();
 
-    // Setup CPP payment gateway
+    $config = [
+        'jwtPublicKey' => 'jwt-public-key'
+    ];
+
+    $parameters = ParameterStorage::setAll($config);
+
+    // Setup CPP payment gateway - it will draw the parameters from ParameterStorage automatically
     $gateway = Omnipay::create( Gateway::class );
-
-    // This process only validates the JWT
-    $gateway->initialize([
-        'jwtSecret' => $jwtSecret
-    ]);
 
     /**
      * Return a CompletePurchaseResponse
      * @throws CompletePurchaseRequestException if the JWT was not validated
      */
     $completePurchaseResponse = $gateway->completePurchase([
-        'token' => $token
+        'jwt' => $jwt
     ])->send();
 
     /**
@@ -60,6 +74,11 @@ try {
      * complete() will send the correct HTTP headers for CPP to complete/fail payment and redirect your site
      */
     $completePurchaseResponse->complete( $callback );
+
+    /**
+     * @var Symfony\Component\HttpFoundation\Response;
+     */
+    $response = $complete->send();
 
 } catch (CompletePurchaseRequestException $e) {
     // the JWT is not valid

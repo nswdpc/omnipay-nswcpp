@@ -11,30 +11,35 @@
 
 ## Requirements
 
-+ clientId
-+ clientSecret
-+ access, purchase, completion and failure URLs
-
++ A `clientId` for OAuth2
++ A `clientSecret` for OAuth2
++ A URL for requesting an access token using the `clientId` and `clientSecret`
++ A payment request URL
++ A gateway URL, where the citizen will complete the payment
 
 ## Example
 
 ```php
 use Omnipay\Omnipay;
 use Omnipay\NSWGOVCPP\Gateway;
-use Omnipay\NSWGOVCPP\Exception\AccessTokenRequestException;
-use Omnipay\NSWGOVCPP\Exception\CompleteAccessTokenRequestException;
+use Omnipay\NSWGOVCPP\ParameterStorage;
+use Omnipay\NSWGOVCPP\AccessTokenRequestException;
+use Omnipay\NSWGOVCPP\CompleteAccessTokenRequestException;
 
 
 try {
 
-    // Setup CPP payment gateway
-    $gateway = Omnipay::create( Gateway::class );
+    $config = [
+        'clientId' => 'your-client-id',
+        'clientSecret' => 'your-client-secret',
+        'accessTokenUrl' => 'https://auth.example.com/accesstoken',
+        'requestPaymentUrl' => 'https://payments.example.com/paymentrequest',
+        'gatewayUrl' => 'https://gateway.example.com/'
+    ];
+    $parameters = ParameterStorage::setAll($config);
 
-    // You provide your client-id and client-secret
-    $gateway->initialize([
-        'clientId' => $clientId,
-        'clientSecret' => $clientSecret
-    ]);
+    // Setup CPP payment gateway - it will draw the parameters from ParameterStorage automatically
+    $gateway = Omnipay::create( Gateway::class );
 
     // Purchase data
     $payload = [
@@ -53,18 +58,18 @@ try {
             // .. another discount
         ],
         "disbursements": [
-            {
+            [
                 "amount": 30,
                 "agencyCode": "SUB_AGENCY_CODE 1"
-            },
-            {
+            ],
+            [
                 "amount": 30,
                 "agencyCode": "SUB_AGENCY_CODE 2"
-            },
-            {
+            ],
+            [
                 "amount": 20,
                 "agencyCode": "SUB_AGENCY_CODE 3"
-            }
+            ]
         ]
     ];
 
@@ -74,10 +79,8 @@ try {
      * If the access token is received an AccessTokenRequestException will be thrown
      * Validation of the token occurs at `completeAuthorize`
      */
-    $accessTokenResponse = $gateway->authorize([
-        // provide the endpointUrl for access token requests
-        'endpointUrl' => 'https://api-psm.g.testservicensw.net/v1/identity/oauth/client-credentials/token'
-    ])->send();
+    $accessTokenResponse = $gateway->authorize()->send();
+    $accessToken = $accessTokenResponse->getAccessToken();
 
     /**
      * Complete the access token validation
@@ -86,16 +89,14 @@ try {
      * If the validation or purchase request fails a CompleteAccessTokenRequestException will be thrown
      */
     $completeAccessTokenResponse = $gateway->completeAuthorize([
-        'endpointUrl' => 'https://api-psm.g.testservicensw.net/cpp-digital/api/request-payment',
-        'gatewayUrl' => 'https://gpp-digital-ui-preprod.apps.pcf-ext.testservicensw.net',
-        'accessToken' => $accessTokenResponse /* @var AccessTokenResponse */
-        'payload' => $payload
+        'accessToken' => $accessToken,/* @var AccessToken */
+        'payload' => $payload/* @var array */
     ])->send();
 
     /*
      * Save the data returned from the payment request
      * and link it to your payload
-     * This is needed to validate the payment
+     * This is needed to validate the payment at the Payment Completion stage
     */
     $myApp->savePaymentReference($payload, $completeAccessTokenResponse);
 

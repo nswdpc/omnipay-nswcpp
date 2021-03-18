@@ -1,6 +1,6 @@
 # Refund a payment
 
-At some point in time, for various reasons, you may need to refund a payment or part of it. 4
+At some point in time, for various reasons, you may need to refund a payment or part of it.
 
 ## Requirements
 
@@ -20,46 +20,55 @@ If you are using the Silverstripe CPP module provided by NSWDPC Digital, this ca
 
 ```php
 use Omnipay\Omnipay;
+use Omnipay\NSWGOVCPP\AccessToken;
 use Omnipay\NSWGOVCPP\Gateway;
-use Omnipay\NSWGOVCPP\Exception\AccessTokenRequestException;
-use Omnipay\NSWGOVCPP\Exception\RefundRequestException;
+use Omnipay\NSWGOVCPP\ParameterStorage;
+use Omnipay\NSWGOVCPP\AccessTokenRequestException;
+use Omnipay\NSWGOVCPP\RefundRequestException;
 
 try {
+
+    $refundAmount = $myApp->getRefundAmount();// mandatory
+    $refundReason = $myApp->getRefundReason();// optional
+
+    $config = [
+        'clientId' => 'your-client-id',
+        'clientSecret' => 'your-client-secret',
+        'refundUrl' => 'https://auth.example.com/accesstoken'
+    ];
+    $parameters = ParameterStorage::setAll($config);
 
     // Setup CPP payment gateway
     $gateway = Omnipay::create( Gateway::class );
 
-    // You provide your client-id and client-secret
-    $gateway->initialize([
-        'clientId' => $clientId,
-        'clientSecret' => $clientSecret
-    ]);
+    // get an access token
+    $accessTokenRequest = $this->gateway->authorize();
+    $accessTokenResponse = $accessTokenRequest->send();
 
     /**
-     * Get an @var AccessTokenResponse
-     * If the access token has not expired, the current access token for the session will be returned
-     * If the access token is invalid or not received an AccessTokenRequestException will be thrown
+     * @var AccessToken
      */
-    $accessToken = $gateway->authorize([
-        // provide the endpointUrl for access token requests
-        'endpointUrl' => 'https://api-psm.g.testservicensw.net/v1/identity/oauth/client-credentials/token'
-    ])->send();
+    $accessToken = $accessTokenResponse->getAccessToken();
 
     /**
      * Send refund request
      * If the refund request fails a RefundRequestException will be thrown
      * If not the $refundResponse represents the response to a successful refund request
      */
-    $refundResponse = $gateway->refund([
-        'endpointUrl' => 'https://api-psm.g.testservicensw.net/cpp-digital/api/{paymentReference}/refund',
-        'accessToken' => $accessToken /* @var AccessTokenResponse */
-        'paymentReference' => $paymentReference,
-        'amount' => $amount, // mandatory
-        'refundReason' => 'reason string' // optional
-    ]
-    )->send();
+    $refundRequest = $gateway->refund([
+        'accessToken' => $accessToken,/* @var AccessToken */
+        'refundAmount' => $refundAmount,
+        'refundReason' => $refundReason
+    ]);
 
-    // handle successful refund response
+    $refundResponse = $refundRequest->send();
+
+    /**
+     * @var string
+     */
+    $refundReference = $refundResponse->getRefundReference();
+
+    // handle successful refund response using the reference
 
 } catch (AccessTokenRequestException $e) {
     // invalid access token request or response failure
