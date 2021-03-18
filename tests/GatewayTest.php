@@ -107,18 +107,18 @@ class GatewayTest extends GatewayTestCase {
         // authorize and get an access token
         $this->setMockHttpResponse('AccessTokenSuccess.response');
 
-        $request = $this->gateway->authorize();
-        $this->assertInstanceOf(AccessTokenRequest::class, $request);
-        $data = $request->getData();
+        $accessTokenRequest = $this->gateway->authorize();
+        $this->assertInstanceOf(AccessTokenRequest::class, $accessTokenRequest);
+        $data = $accessTokenRequest->getData();
 
         $this->assertEquals($params['clientId'], $data['client_id']);
         $this->assertEquals($params['clientSecret'], $data['client_secret']);
         $this->assertEquals(AccessTokenRequest::OAUTH2_GRANT_CLIENT_CREDENTIALS, $data['grant_type']);
         // send the request
-        $response = $request->send();
-        $this->assertInstanceOf(AccessTokenResponse::class, $response);
+        $accessTokenResponse = $accessTokenRequest->send();
+        $this->assertInstanceOf(AccessTokenResponse::class, $accessTokenResponse);
         // get the access token
-        $accessToken = $response->getAccessToken();
+        $accessToken = $accessTokenResponse->getAccessToken();
         $accessToken->setExpires( (time() + 300) );//bump the expiry
         $this->assertFalse($accessToken->isExpired(), "Access token has expired:" . time() . ">" . $accessToken->getExpires());
         $this->assertEquals("daarhmehearties", $accessToken->getToken());
