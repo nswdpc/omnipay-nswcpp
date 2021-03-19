@@ -40,8 +40,6 @@ trait NeedsAccessTokenTrait {
             );
         }
 
-        \NSWDPC\Payments\NSWGOVCPP\Agency\Logger::log("AccessToken: " . $accessToken->getToken());
-
         return $accessToken;
     }
 }

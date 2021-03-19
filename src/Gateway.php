@@ -31,22 +31,13 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * Get an access token that can be used for purchase/void requests
-     * @return Omnipay\NSWGOVCPP\AccessTokenRequest
-     */
-    public function authorize(array $parameters = array())
-    {
-        return $this->createRequest(AccessTokenRequest::class, $parameters);
-    }
-
-    /**
-     * Complete the authorisation process
-     * This sends the payment request to the endpoint along with the OAuth2 access token
+     * Start the purchase process
+     * Create an access token, send the payment payload to the endpoint, redirect to the gateway
      * @return Omnipay\NSWGOVCPP\CompleteAccessTokenRequest
      */
-    public function completeAuthorize(array $parameters = array())
+    public function purchase(array $parameters = array())
     {
-        return $this->createRequest(CompleteAccessTokenRequest::class, $parameters);
+        return $this->createRequest(PurchaseRequest::class, $parameters);
     }
 
     /**

@@ -2,26 +2,42 @@
 
 namespace Omnipay\NSWGOVCPP;
 
-use Omnipay\NSWGOVCPP\CompleteAccessTokenRequestException;
 use Omnipay\Common\Message\ResponseInterface;
 
 /**
- * Complete the access token request
+ * Represents a purchase request to the CPP
  *
- * Give an access token response from the endpoint
- * validate and redirect to the payment gateway
+ * Retrieves an access token from the endpoint, for use in purchase requests
  * @author James
  */
-class CompleteAccessTokenRequest extends AbstractAgencyRequest
+class PurchaseRequest extends AbstractAgencyRequest
 {
 
     use GetterSetterParameterTrait;
+    use NeedsAccessTokenTrait;
 
+    const OAUTH2_GRANT_CLIENT_CREDENTIALS = 'client_credentials';
+
+    /**
+     * @TODO implement session/server based saving of access token
+     * Check if the current token has expired, if so, return false
+     * @return mixed false when the token has expired, an AccessTokenResponse if not
+     */
+    public function getCurrentAccessToken() {
+        return false;
+    }
+
+    /**
+     * Set the payment payload
+     */
     public function setPayload(array $payload) {
         $this->setParameter('payload', $payload);
         return $this;
     }
 
+    /**
+     * Get the payment payload
+     */
     public function getPayload() : array {
         return $this->getParameter('payload');
     }
@@ -29,7 +45,7 @@ class CompleteAccessTokenRequest extends AbstractAgencyRequest
     /**
      * Validate the payment payload
      * @TODO implement per payment method payload requests - single payment, disbursement, recurring
-     * @throws CompleteAccessTokenRequestException
+     * @throws PurchaseRequestException
      */
     public function validatePaymentPayload(array $payload = []) : bool {
         return true;
@@ -46,7 +62,8 @@ class CompleteAccessTokenRequest extends AbstractAgencyRequest
      }
 
      /**
-      * Send access token request to the endpoint, handle the result
+      * Send payment payload to the endpoint, handle the response
+      * Authenticate with the access token
       * @param array $data
       * @throws CompleteAccessTokenRequestException
       */
@@ -56,24 +73,17 @@ class CompleteAccessTokenRequest extends AbstractAgencyRequest
         $url = $this->getRequestPaymentUrl();
         if(!$url) {
             // TODO: validate the endpoint URL
-            throw new CompleteAccessTokenRequestException("Invalid paymentRequestUrl");
+            throw new PurchaseRequestException("Invalid paymentRequestUrl");
         }
 
         // check for an empty payload data
         if(empty($data)) {
-            throw new CompleteAccessTokenRequestException("Empty payment request payload");
+            throw new PurchaseRequestException("Empty payment request payload");
         }
 
-        $accessToken = $this->getAccessToken();
+        $accessToken = $this->retrieveAccessToken();
         if(!($accessToken instanceof AccessToken)) {
-            throw new CompleteAccessTokenRequestException("Invalid access token");
-        }
-
-        if($accessToken->isExpired()) {
-            throw new CompleteAccessTokenRequestException(
-                "The access token has expired, request a new one",
-                AccessTokenResponse::EXPIRED
-            );
+            throw new PurchaseRequestException("Invalid access token");
         }
 
         $result = $this->doPostRequest(
@@ -84,7 +94,7 @@ class CompleteAccessTokenRequest extends AbstractAgencyRequest
             ],
             $data
         );
-        $response = new CompleteAccessTokenResponse($this, $result);
+        $response = new PurchaseResponse($this, $result);
         return $response;
     }
 }

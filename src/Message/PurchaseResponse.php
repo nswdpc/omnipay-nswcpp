@@ -9,10 +9,10 @@ use Omnipay\Common\Message\RedirectResponseInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Represents a response to the CompleteAccessTokenRequest
+ * Represents a response to the PurchaseRequest
  * @author James
  */
-class CompleteAccessTokenResponse extends AbstractResponse implements RedirectResponseInterface
+class PurchaseResponse extends AbstractResponse implements RedirectResponseInterface
 {
 
     /**
@@ -20,10 +20,11 @@ class CompleteAccessTokenResponse extends AbstractResponse implements RedirectRe
      * <blockquote>If the agency has already send a request with the same transactionID and
      *  if the payment hasn't been collected then CPP will send the same CPP
      *  reference in the response with the flag as duplicate</blockquote>
+     * @throws PurchaseRequestException
      */
     public function isDuplicate() {
         if(empty($this->data) || !array_key_exists('duplicate', $this->data)) {
-            throw new CompleteAccessTokenRequestException("You cannot call isDuplicate() when the response data is not available");
+            throw new PurchaseRequestException("You cannot call isDuplicate() when the response data is not available");
         }
         return $this->data['duplicate'] ? true : false;
     }
@@ -63,7 +64,7 @@ class CompleteAccessTokenResponse extends AbstractResponse implements RedirectRe
     }
 
     /**
-     * Does the response require a redirect?
+     * The purchase response will redirect to the Gateway for completion
      *
      * @return boolean
      */
