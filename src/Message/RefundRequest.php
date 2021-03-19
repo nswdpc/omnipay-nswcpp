@@ -14,6 +14,7 @@ class RefundRequest extends AbstractAgencyRequest
 {
 
     use GetterSetterParameterTrait;
+    use NeedsAccessTokenTrait;
 
     public function setRefundAmount($amount) {
         $this->setParameter('refundAmount', $amount);
