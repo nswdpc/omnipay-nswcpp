@@ -32,7 +32,8 @@ class CompletePurchaseResponse extends AbstractResponse implements NotificationI
      * Return whether the response is successful
      */
     public function isSuccessful() {
-        return $this->getCode() == Response::HTTP_OK;
+        $result = $this->hasValidBaseData();
+        return $result;
     }
 
     /**
