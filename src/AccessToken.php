@@ -68,8 +68,8 @@ class AccessToken {
     /**
      * Return whether valid
      */
-    public function isValid($leeway = 0) {
-        return $this->getToken() && $this->isExpired($leeway) && $this->isBearerType();
+    public function isValid($leeway = 0) : bool {
+        return $this->getToken() && !$this->isExpired($leeway) && $this->isBearerType();
     }
 
 }
