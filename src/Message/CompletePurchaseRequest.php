@@ -18,7 +18,7 @@ class CompletePurchaseRequest extends AbstractAgencyRequest
 {
 
     use GetterSetterParameterTrait;
-    use NeedsJwtDecodeTrait;
+    use NeedsJWTDecodeTrait;
 
     /**
      * Validate and returns the JWT payload

@@ -7,7 +7,7 @@ namespace Omnipay\NSWGOVCPP;
  * In the case of NSWGOVCPP, this is payment completion
  * @author James
  */
-trait NeedsJwtDecodeTrait {
+trait NeedsJWTDecodeTrait {
 
     /**
      * Store the JWT payload
