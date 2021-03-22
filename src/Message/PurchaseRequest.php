@@ -16,17 +16,6 @@ class PurchaseRequest extends AbstractAgencyRequest
     use GetterSetterParameterTrait;
     use NeedsAccessTokenTrait;
 
-    const OAUTH2_GRANT_CLIENT_CREDENTIALS = 'client_credentials';
-
-    /**
-     * @TODO implement session/server based saving of access token
-     * Check if the current token has expired, if so, return false
-     * @return mixed false when the token has expired, an AccessTokenResponse if not
-     */
-    public function getCurrentAccessToken() {
-        return false;
-    }
-
     /**
      * Set the payment payload
      */
