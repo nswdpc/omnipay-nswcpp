@@ -8,13 +8,27 @@ namespace Omnipay\NSWGOVCPP;
  * @author James
  */
 trait NeedsAccessTokenTrait {
+
+    protected function getOAuth2GrantType() {
+        return 'client_credentials';
+    }
+
+    /**
+     * @TODO implement session/server based saving of access token
+     * Check if the current token has expired, if so, return false
+     * @return mixed false when the token has expired, an AccessTokenResponse if not
+     */
+    public function getCurrentAccessToken() {
+        return false;
+    }
+
     /**
      * Retrieve and access token for authentication
      */
     public function retrieveAccessToken() : AccessToken {
         $this->validate('clientId','clientSecret','accessTokenUrl');
         $payload = [
-            'grant_type' => self::OAUTH2_GRANT_CLIENT_CREDENTIALS,
+            'grant_type' => $this->getOAuth2GrantType(),
             'client_id' => $this->getParameter('clientId'),
             'client_secret' => $this->getParameter('clientSecret'),
         ];
