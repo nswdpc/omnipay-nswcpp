@@ -27,15 +27,6 @@ trait GetterSetterParameterTrait {
         return $this->getParameter('clientSecret');
     }
 
-    public function setJwtSecret($jwtSecret) {
-        $this->setParameter('jwtSecret', $jwtSecret);
-        return $this;
-    }
-
-    public function getJwtSecret() {
-        return $this->getParameter('jwtSecret');
-    }
-
     public function setJwtPublicKey($jwtPublicKey) {
         $this->setParameter('jwtPublicKey', $jwtPublicKey);
         return $this;
@@ -87,8 +78,27 @@ trait GetterSetterParameterTrait {
         return $this;
     }
 
+    /**
+     * @note the URL is in the format https://api-psm.g.testservicensw.net/cpp-digital/api/payments/{{paymentReference}}/refund
+     * The paymentReference must be passed in for the str_replace to occur
+     */
     public function getRefundUrl() {
-        return $this->getParameter('refundUrl');
+        $url = $this->getParameter('refundUrl');
+        $paymentReference = $this->getPaymentReference();
+        if(!$paymentReference) {
+            throw new \Exception("Internal error: the paymentReference was not provided");
+        }
+        $url = str_replace("/{{paymentReference}}/", "/{$paymentReference}/", $url);
+        return $url;
+    }
+
+    public function setPaymentReference($paymentReference) {
+        $this->setParameter('paymentReference', $paymentReference);
+        return $this;
+    }
+
+    public function getPaymentReference() {
+        return $this->getParameter('paymentReference');
     }
 
 }
