@@ -68,8 +68,8 @@ class RefundRequest extends AbstractAgencyRequest
             throw new RefundRequestException("Invalid refund amount: {$amount}, " . gettype($amount));
         }
 
-        // we required an Oauth2 access token
-        $accessToken = $this->getAccessToken();
+        // Refund requires an Oauth2 access token
+        $accessToken = $this->retrieveAccessToken();
         if(!$accessToken instanceof Accesstoken) {
             throw new RefundRequestException("Invalid access token for refund request");
         }
