@@ -52,9 +52,10 @@ trait NeedsJWTDecodeTrait {
     /**
      * Validate the JWT
      * @param boolean $force
+     * @return array
      * @throws JWTDecodeException
      */
-    public function validateJWT($force = false) : bool {
+    public function validateJWT($force = false) : array {
         // if already validated
         if($this->jwtValidated && !$force) {
             return $this->jwtPayload;
@@ -70,6 +71,7 @@ trait NeedsJWTDecodeTrait {
         $decoded = JWTProcessor::decode($token, $jwtPublicKey, $this->jwtAlgos, $this->jwtLeeway);
         $this->jwtPayload = (array) $decoded;
         $this->jwtValidated = true;
+        return $this->jwtPayload;
     }
 
 }
