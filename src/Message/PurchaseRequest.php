@@ -12,14 +12,14 @@ use Omnipay\Common\Message\ResponseInterface;
  */
 class PurchaseRequest extends AbstractAgencyRequest
 {
-
     use GetterSetterParameterTrait;
     use NeedsAccessTokenTrait;
 
     /**
      * Set the payment payload
      */
-    public function setPayload(array $payload) {
+    public function setPayload(array $payload)
+    {
         $this->setParameter('payload', $payload);
         return $this;
     }
@@ -27,7 +27,8 @@ class PurchaseRequest extends AbstractAgencyRequest
     /**
      * Get the payment payload
      */
-    public function getPayload() : array {
+    public function getPayload() : array
+    {
         return $this->getParameter('payload');
     }
 
@@ -36,7 +37,8 @@ class PurchaseRequest extends AbstractAgencyRequest
      * @TODO implement per payment method payload requests - single payment, disbursement, recurring
      * @throws PurchaseRequestException
      */
-    public function validatePaymentPayload(array $payload = []) : bool {
+    public function validatePaymentPayload(array $payload = []) : bool
+    {
         return true;
     }
 
@@ -44,34 +46,36 @@ class PurchaseRequest extends AbstractAgencyRequest
      * Get payload data for the purchase request
      * @return array
      */
-     public function getData() : array {
-         $payload = $this->getPayload();
-         $this->validatePaymentPayload();
-         return $payload;
-     }
+    public function getData() : array
+    {
+        $payload = $this->getPayload();
+        $this->validatePaymentPayload();
+        return $payload;
+    }
 
-     /**
-      * Send payment payload to the endpoint, handle the response
-      * Authenticate with the access token
-      * @param array $data
-      * @throws CompleteAccessTokenRequestException
-      */
-    public function sendData($data) : ResponseInterface {
+    /**
+     * Send payment payload to the endpoint, handle the response
+     * Authenticate with the access token
+     * @param array $data
+     * @throws CompleteAccessTokenRequestException
+     */
+    public function sendData($data) : ResponseInterface
+    {
 
         // validate the existence of the payment request url
         $url = $this->getRequestPaymentUrl();
-        if(!$url) {
+        if (!$url) {
             // TODO: validate the endpoint URL
             throw new PurchaseRequestException("Invalid paymentRequestUrl");
         }
 
         // check for an empty payload data
-        if(empty($data)) {
+        if (empty($data)) {
             throw new PurchaseRequestException("Empty payment request payload");
         }
 
         $accessToken = $this->retrieveAccessToken();
-        if(!($accessToken instanceof AccessToken)) {
+        if (!($accessToken instanceof AccessToken)) {
             throw new PurchaseRequestException("Invalid access token");
         }
 

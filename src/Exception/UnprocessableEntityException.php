@@ -7,4 +7,6 @@ namespace Omnipay\NSWGOVCPP;
  * CompletePurchaseResponse::complete(), resulting in the required 422 error code being returned to the gateway
  * @author James
  */
-class UnprocessableEntityException extends \Exception {}
+class UnprocessableEntityException extends \Exception
+{
+}

@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CompletePurchaseRequest extends AbstractAgencyRequest
 {
-
     use GetterSetterParameterTrait;
     use NeedsJWTDecodeTrait;
 
@@ -27,7 +26,8 @@ class CompletePurchaseRequest extends AbstractAgencyRequest
      * Set whether to exit or not on JWT decode errors
      * The default is true but this can be turned off for testing purposes
      */
-    public function setExitOnError(bool $exit) {
+    public function setExitOnError(bool $exit)
+    {
         $this->exitOnError = $exit;
         return $this;
     }
@@ -35,7 +35,8 @@ class CompletePurchaseRequest extends AbstractAgencyRequest
     /**
      * Return exitOnError value
      */
-    public function getExitOnError() : bool {
+    public function getExitOnError() : bool
+    {
         return $this->exitOnError;
     }
 
@@ -44,19 +45,20 @@ class CompletePurchaseRequest extends AbstractAgencyRequest
      * @return array
      * @throws JWTDecodeException
      */
-     public function getData() : array {
+    public function getData() : array
+    {
         $this->validateJWT();
         return $this->jwtPayload;
-     }
+    }
 
-     /**
-      * Catch any errors in the send process in order to return the correct
-      * HTTP response code immediately without further processing
-      *
-      * @return ResponseInterface
-      */
-     public function send()
-     {
+    /**
+     * Catch any errors in the send process in order to return the correct
+     * HTTP response code immediately without further processing
+     *
+     * @return ResponseInterface
+     */
+    public function send()
+    {
         try {
             // send the request, decode JWT, use payload to complete payment
             return parent::send();
@@ -75,7 +77,7 @@ class CompletePurchaseRequest extends AbstractAgencyRequest
         // Error condition handling
         // sanity check on the HTTP error code
         $code = intval($code);
-        if($code < 400 || $code > 599) {
+        if ($code < 400 || $code > 599) {
             // ensure we use a sane 50x error code if the code provided
             // would tell the CPP incorrect information
             $code = Response::HTTP_SERVICE_UNAVAILABLE;
@@ -91,23 +93,24 @@ class CompletePurchaseRequest extends AbstractAgencyRequest
         );
         $response->send();
 
-        if($this->getExitOnError()) {
+        if ($this->getExitOnError()) {
             // exit to avoid modules interfering with this response
             exit;
         } else {
             return $response;
         }
-     }
+    }
 
-     /**
-      * Create a CompletePurchaseResponse instance to represent payment completion
-      * @param array $data
-      * @throws JWTDecodeException
-      */
-    public function sendData($data) : ResponseInterface {
+    /**
+     * Create a CompletePurchaseResponse instance to represent payment completion
+     * @param array $data
+     * @throws JWTDecodeException
+     */
+    public function sendData($data) : ResponseInterface
+    {
 
         // check that there is a payload
-        if(empty($data)) {
+        if (empty($data)) {
             throw new JWTDecodeException("The decoded JWT payload was empty");
         }
 

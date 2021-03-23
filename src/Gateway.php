@@ -15,10 +15,10 @@ use Omnipay\NSWGOVCPP\RefundRequest;
  */
 class Gateway extends AbstractGateway
 {
-
     use GetterSetterParameterTrait;
 
-    public function getName() {
+    public function getName()
+    {
         return "NSWGOVCPP";
     }
 
@@ -35,7 +35,7 @@ class Gateway extends AbstractGateway
      * Create an access token, send the payment payload to the endpoint, redirect to the gateway
      * @return Omnipay\NSWGOVCPP\CompleteAccessTokenRequest
      */
-    public function purchase(array $parameters = array())
+    public function purchase(array $parameters = [])
     {
         return $this->createRequest(PurchaseRequest::class, $parameters);
     }
@@ -45,7 +45,7 @@ class Gateway extends AbstractGateway
      * The gateway will POST a JWT token that is decoded, containing the payment details
      * @return Omnipay\NSWGOVCPP\CompletePurchaseRequest
      */
-    public function completePurchase(array $parameters = array())
+    public function completePurchase(array $parameters = [])
     {
         return $this->createRequest(CompletePurchaseRequest::class, $parameters);
     }
@@ -54,9 +54,8 @@ class Gateway extends AbstractGateway
      * Refund a payment reference, using an access token
      * @return Omnipay\NSWGOVCPP\RefundRequest
      */
-    public function refund(array $parameters = array())
+    public function refund(array $parameters = [])
     {
         return $this->createRequest(RefundRequest::class, $parameters);
     }
-
 }

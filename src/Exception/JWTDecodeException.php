@@ -7,4 +7,6 @@ namespace Omnipay\NSWGOVCPP;
  * This results in a 422 exception
  * @author James
  */
-class JWTDecodeException extends UnprocessableEntityException {}
+class JWTDecodeException extends UnprocessableEntityException
+{
+}

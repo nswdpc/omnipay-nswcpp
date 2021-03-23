@@ -7,7 +7,8 @@ namespace Omnipay\NSWGOVCPP;
  * In the case of NSWGOVCPP, this is payment completion
  * @author James
  */
-trait NeedsJWTDecodeTrait {
+trait NeedsJWTDecodeTrait
+{
 
     /**
      * Store the JWT payload
@@ -37,7 +38,8 @@ trait NeedsJWTDecodeTrait {
      * Set the JWT sent from the CPP system
      * @param string $jwt
      */
-    public function setJwt($jwt) {
+    public function setJwt($jwt)
+    {
         $this->setParameter('jwt', $jwt);
     }
 
@@ -45,7 +47,8 @@ trait NeedsJWTDecodeTrait {
      * Get the JWT sent from the CPP system
      * @return string $jwt
      */
-    public function getJwt() : string {
+    public function getJwt() : string
+    {
         return $this->getParameter('jwt');
     }
 
@@ -55,15 +58,16 @@ trait NeedsJWTDecodeTrait {
      * @return array
      * @throws JWTDecodeException
      */
-    public function validateJWT($force = false) : array {
+    public function validateJWT($force = false) : array
+    {
         // if already validated
-        if($this->jwtValidated && !$force) {
+        if ($this->jwtValidated && !$force) {
             return $this->jwtPayload;
         }
-        if(!$token = $this->getJwt()) {
+        if (!$token = $this->getJwt()) {
             throw new JWTDecodeException("The JWT is not present or empty");
         }
-        if(!($jwtPublicKey = $this->getJwtPublicKey())) {
+        if (!($jwtPublicKey = $this->getJwtPublicKey())) {
             throw new JWTDecodeException("The JWT public key is not present in configuration or empty");
         }
 
@@ -73,5 +77,4 @@ trait NeedsJWTDecodeTrait {
         $this->jwtValidated = true;
         return $this->jwtPayload;
     }
-
 }

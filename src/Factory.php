@@ -17,10 +17,10 @@ class Factory
      * Create a new instance of {@link NSWDPC\Payments\CPP\Gateway} and return it
      * @param ParameterStorage $parameterStorage
      */
-    public function create( ParameterStorage $parameterStorage) : Gateway {
-        $gateway = Omnipay::create( CustomerPaymentsPlatformGateway::class );
-        $gateway->initialize( $parameterStorage::getAll() );
+    public function create(ParameterStorage $parameterStorage) : Gateway
+    {
+        $gateway = Omnipay::create(CustomerPaymentsPlatformGateway::class);
+        $gateway->initialize($parameterStorage::getAll());
         return $gateway;
     }
-
 }

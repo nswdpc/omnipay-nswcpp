@@ -8,7 +8,6 @@ use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\NotificationInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-
 /**
  * Represents a response to CompletePurchaseRequest
  * Call complete() to get the response for the CPP and send() to send it
@@ -31,7 +30,8 @@ class CompletePurchaseResponse extends AbstractResponse implements NotificationI
     /**
      * Return whether the response is successful
      */
-    public function isSuccessful() {
+    public function isSuccessful()
+    {
         $result = $this->hasValidBaseData();
         return $result;
     }
@@ -41,7 +41,8 @@ class CompletePurchaseResponse extends AbstractResponse implements NotificationI
      *
      * @return string A reference provided by the gateway to represent this transaction
      */
-    public function getTransactionReference() {
+    public function getTransactionReference()
+    {
         return $this->data['paymentCompletionReference'];
     }
 
@@ -51,7 +52,8 @@ class CompletePurchaseResponse extends AbstractResponse implements NotificationI
      * @return string Transaction status, one of {@link NotificationInterface::STATUS_COMPLETED},
      * {@link NotificationInterface::STATUS_PENDING}, or {@link NotificationInterface::STATUS_FAILED}.
      */
-    public function getTransactionStatus() {
+    public function getTransactionStatus()
+    {
         return NotificationInterface::STATUS_COMPLETED;
     }
 
@@ -60,7 +62,8 @@ class CompletePurchaseResponse extends AbstractResponse implements NotificationI
      *
      * @return string A response message from the payment gateway
      */
-    public function getMessage() {
+    public function getMessage()
+    {
         return $this->data['bankReference'];
     }
 
@@ -69,7 +72,8 @@ class CompletePurchaseResponse extends AbstractResponse implements NotificationI
      *
      * @return int
      */
-    public function getCode() {
+    public function getCode()
+    {
         return $this->code;
     }
 
@@ -78,8 +82,9 @@ class CompletePurchaseResponse extends AbstractResponse implements NotificationI
      * This validates the existence of common data in the JWT payload
      * @throws CompletePurchaseRequestException
      */
-    public function hasValidBaseData() : bool {
-        if($this->validated) {
+    public function hasValidBaseData() : bool
+    {
+        if ($this->validated) {
             return true;
         }
         $required = [
@@ -90,13 +95,13 @@ class CompletePurchaseResponse extends AbstractResponse implements NotificationI
             'agencyTransactionId'
         ];
         $missing = [];
-        foreach($required as $key) {
-            if(empty($this->data[$key])) {
+        foreach ($required as $key) {
+            if (empty($this->data[$key])) {
                 $missing[] = $key;
             }
         }
         $valid = empty($missing);
-        if(!$valid) {
+        if (!$valid) {
             throw new CompletePurchaseRequestException("Missing: " . implode(",", $missing));
         }
         $this->validated = true;
@@ -107,12 +112,13 @@ class CompletePurchaseResponse extends AbstractResponse implements NotificationI
      * Complete the payment completion processing
      * The application should provide a callback that returns a boolean or
      */
-    public function complete( callable $callback ) : Response {
+    public function complete(callable $callback) : Response
+    {
         try {
             // check for validate common payment data
             $this->hasValidBaseData();
             // verify via the callable provided by the application
-            if($result = $callback($this)) {
+            if ($result = $callback($this)) {
                 // All OK
                 $this->code = Response::HTTP_OK;
             } else {
@@ -126,8 +132,7 @@ class CompletePurchaseResponse extends AbstractResponse implements NotificationI
         }
 
         $response = new Response();
-        $response->setStatusCode( $this->getCode() );
+        $response->setStatusCode($this->getCode());
         return $response;
     }
-
 }

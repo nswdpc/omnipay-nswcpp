@@ -22,8 +22,9 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
      *  reference in the response with the flag as duplicate</blockquote>
      * @throws PurchaseRequestException
      */
-    public function isDuplicate() {
-        if(empty($this->data) || !array_key_exists('duplicate', $this->data)) {
+    public function isDuplicate()
+    {
+        if (empty($this->data) || !array_key_exists('duplicate', $this->data)) {
             throw new PurchaseRequestException("You cannot call isDuplicate() when the response data is not available");
         }
         return $this->data['duplicate'] ? true : false;
@@ -32,14 +33,16 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
     /**
      * Get paymentReference
      */
-    public function getPaymentReference() {
+    public function getPaymentReference()
+    {
         return isset($this->data['paymentReference']) ? $this->data['paymentReference'] : false;
     }
 
     /**
      * Return whether the {@link NSWDPC\Payments\CPP\CompleteAccessTokenRequest} was successful
      */
-    public function isSuccessful() : bool {
+    public function isSuccessful() : bool
+    {
         return $this->getPaymentReference() !== false;
     }
 
@@ -53,7 +56,7 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
         $url = "";
         $paymentReference = $this->getPaymentReference();
         $gatewayUrl = $this->getRequest()->getGatewayUrl();
-        if($paymentReference && $gatewayUrl) {
+        if ($paymentReference && $gatewayUrl) {
             $url = rtrim($gatewayUrl, "?");
             $url .= "?";
             $url .= http_build_query([
@@ -88,9 +91,10 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
      * Helper method to call a redirect immedidately using header()
      * @return void;
      */
-    public function doRedirectToGateway() {
+    public function doRedirectToGateway()
+    {
         $url = $this->getRedirectUrl();
-        if($url) {
+        if ($url) {
             header("HTTP/1.1 302 Found");
             header("Location: " . $url);
             exit;
@@ -106,5 +110,4 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
         $headers = [];
         return new RedirectResponse($this->getRedirectUrl(), 302, $headers);
     }
-
 }

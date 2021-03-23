@@ -5,7 +5,8 @@ namespace Omnipay\NSWGOVCPP;
 use Firebase\JWT\JWT;
 use Symfony\Component\HttpFoundation\Response;
 
-class JWTProcessor {
+class JWTProcessor
+{
 
     /**
      * Decode the JWT and provide error handling to return the correct error code
@@ -16,7 +17,8 @@ class JWTProcessor {
      * @throws UnprocessableEntityException
      * @throws JWTDecodeException
      */
-    public static function decode(string $token, string $key, array $algos, int $leeway = 0) {
+    public static function decode(string $token, string $key, array $algos, int $leeway = 0)
+    {
         try {
             JWT::$leeway = $leeway;
             $payload = JWT::decode($token, $key, $algos);
@@ -29,8 +31,8 @@ class JWTProcessor {
         }
 
         // handle issuer claim
-        if(!empty($payload->iss)) {
-            switch($payload->iss) {
+        if (!empty($payload->iss)) {
+            switch ($payload->iss) {
                 case 'NSWDPC-FakeGateway-422':
                     throw new UnprocessableEntityException("Issuer triggered a 422");
                     break;
@@ -45,5 +47,4 @@ class JWTProcessor {
 
         return $payload;
     }
-
 }

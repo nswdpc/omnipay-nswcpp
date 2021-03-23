@@ -5,7 +5,8 @@ namespace Omnipay\NSWGOVCPP;
 /**
  * Represents and Oauth2 access token received from the CPP gateway
  */
-class AccessToken {
+class AccessToken
+{
 
     /**
      * @var string
@@ -22,7 +23,8 @@ class AccessToken {
      */
     protected $type = '';
 
-    public function __construct($token, $expires, $type) {
+    public function __construct($token, $expires, $type)
+    {
         $this->token = $token;
         $this->expires = $expires;
         $this->type = $type;
@@ -31,11 +33,13 @@ class AccessToken {
     /*
      * Return the token
      */
-    public function getToken() : string {
+    public function getToken() : string
+    {
         return $this->token;
     }
 
-    public function isBearerType() : bool {
+    public function isBearerType() : bool
+    {
         return $this->type = "Bearer";
     }
 
@@ -43,7 +47,8 @@ class AccessToken {
      * Check whether the token has expired
      * @param int $leeway
      */
-    public function isExpired($leeway = 0) : bool {
+    public function isExpired($leeway = 0) : bool
+    {
         return time() > ($this->expires - $leeway);
     }
 
@@ -51,7 +56,8 @@ class AccessToken {
      * Return the current expires
      * @return int
      */
-    public function getExpires() {
+    public function getExpires()
+    {
         return $this->expires;
     }
 
@@ -60,7 +66,8 @@ class AccessToken {
      * @param int $expires
      * @return void
      */
-    public function setExpires($expires) {
+    public function setExpires($expires)
+    {
         $this->expires = $expires;
         return $this;
     }
@@ -68,8 +75,8 @@ class AccessToken {
     /**
      * Return whether valid
      */
-    public function isValid($leeway = 0) : bool {
+    public function isValid($leeway = 0) : bool
+    {
         return $this->getToken() && !$this->isExpired($leeway) && $this->isBearerType();
     }
-
 }

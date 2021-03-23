@@ -6,7 +6,8 @@ namespace Omnipay\NSWGOVCPP;
  * Store our default parameters, you can use this class or a subclass of this
  * to set up your parameters
  */
-class ParameterStorage {
+class ParameterStorage
+{
 
     /**
      * @var array
@@ -17,7 +18,8 @@ class ParameterStorage {
      * Returns the default parameter set used by the CPP gateway class
      * @return array
      */
-    public static function getDefault() {
+    public static function getDefault()
+    {
         return [
             'clientId' => '',
             'clientSecret' => '',
@@ -33,7 +35,8 @@ class ParameterStorage {
      * Returns the current parameter set
      * @return array
      */
-    public static function getAll() {
+    public static function getAll()
+    {
         return self::$parameters;
     }
 
@@ -42,7 +45,8 @@ class ParameterStorage {
      * @param array $parameters
      * @return void
      */
-    public static function setAll(array $parameters) {
+    public static function setAll(array $parameters)
+    {
         self::$parameters = array_replace(self::getDefault(), $parameters);
     }
 
@@ -52,7 +56,8 @@ class ParameterStorage {
      * @param mixed $value
      * @return void
      */
-    public static function set($key, $value) {
+    public static function set($key, $value)
+    {
         self::$parameters[ $key ] = $value;
     }
 }
