@@ -52,33 +52,24 @@ trait NeedsJWTDecodeTrait {
     /**
      * Validate the JWT
      * @param boolean $force
-     * @throws CompletePurchaseRequestException|UnprocessableEntityException
+     * @throws JWTDecodeException
      */
     public function validateJWT($force = false) : bool {
-
         // if already validated
         if($this->jwtValidated && !$force) {
             return $this->jwtPayload;
         }
-
         if(!$token = $this->getJwt()) {
-            throw new CompletePurchaseRequestException("The JWT is not present or empty");
+            throw new JWTDecodeException("The JWT is not present or empty");
         }
         if(!($jwtPublicKey = $this->getJwtPublicKey())) {
-            throw new CompletePurchaseRequestException("The JWT public key is not present or empty");
+            throw new JWTDecodeException("The JWT public key is not present in configuration or empty");
         }
 
-        try {
-            $error = "";
-            $decoded = JWTProcessor::decode($token, $jwtPublicKey, $this->jwtAlgos, $this->jwtLeeway);
-            $this->jwtPayload = (array) $decoded;
-            $this->jwtValidated = true;
-            return true;
-        } catch (\Exception $e) {
-            // noop
-            $error = $e->getMessage();
-        }
-        throw new UnprocessableEntityException("The JWT {$token} could not be verified: {$error}");
+        // decode the JWT, which can throw a JWTDecodeException or UnprocessableEntityException
+        $decoded = JWTProcessor::decode($token, $jwtPublicKey, $this->jwtAlgos, $this->jwtLeeway);
+        $this->jwtPayload = (array) $decoded;
+        $this->jwtValidated = true;
     }
 
 }
