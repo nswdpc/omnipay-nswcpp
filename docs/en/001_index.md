@@ -2,18 +2,11 @@
 
 > Prequisites: you have an active agency account with the CPP, including tests endpoints, a client id and secret.
 
-## Getting an access token and starting the payment process
++ [Make a payment](./002_access_and_authorise_payment_request.md)
++ [Completing a payment](./003_payment_completion.md)
++ [Refunding a payment](./004_refund_payment.md)
 
-[Access and authorise payment request](./002_access_and_authorise_payment_request.md)
-
-## Completing a payment
-
-[Completing a payment](./003_payment_completion.md)
-
-## Refund a payment
-
-[Refund a payment](./004_refund_payment.md)
-
+Documentation improvements are welcome, open PR to do so.
 
 ## Gateway factory
 

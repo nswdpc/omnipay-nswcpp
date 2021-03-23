@@ -26,58 +26,62 @@ The customer is awaiting the results of this verification at the gateway.
 
 Upon returning a `200 OK`, the customer will be redirected to your configured payment completion page.
 
+See also [GatewayTest](../../tests/GatewayTest.php) for test cases.
+
 ```php
 
 use Omnipay\Omnipay;
+use Omnipay\NSWGOVCPP\CompletePurchaseRequest;
+use Omnipay\NSWGOVCPP\CompletePurchaseRequestException;
 use Omnipay\NSWGOVCPP\CompletePurchaseResponse;
 use Omnipay\NSWGOVCPP\Gateway;
 use Omnipay\NSWGOVCPP\ParameterStorage;
-use Omnipay\NSWGOVCPP\CompletePurchaseRequestException;
 use Omnipay\NSWGOVCPP\UnprocessableEntityException;
 
 try {
 
-    $callback = function(CompletePurchaseResponse $response) {
-        /**
-         * process payment completion in your app
-         * the callback can:
-         * return true on success (resulting in a 200)
-         * return false on failure (resulting in a 503)
-         * or throw an UnprocessableEntityException to return a HTTP 422 to the CPP
-         */
-    };
-
-    // the CPP will POST a JWT to your controller
-    $jwt = $myApp->getToken();
+    // the CPP will POST a JWT to your controller, you should retrieve it
+    $jwt = $myApp->getJWT();
 
     $config = [
+        // set the JWT public key
         'jwtPublicKey' => 'jwt-public-key'
     ];
 
     $parameters = ParameterStorage::setAll($config);
 
-    // Setup CPP payment gateway - it will draw the parameters from ParameterStorage automatically
+    // Setup CPP payment gateway - it will draw the parameters from ParameterStorage automatically// @var //// // //////////////// @var Omnipay\NSWGOVCPP\Gateway
     $gateway = Omnipay::create( Gateway::class );
 
-    /**
-     * Return a CompletePurchaseResponse
-     * @throws CompletePurchaseRequestException if the JWT was not validated
-     */
-    $completePurchaseResponse = $gateway->completePurchase([
+    // @var Omnipay\NSWGOVCPP\CompletePurchaseRequest
+    $completePurchaseRequest = $gateway->completePurchase([
         'jwt' => $jwt
-    ])->send();
+    ]);
+
+    // @var Omnipay\NSWGOVCPP\CompletePurchaseResponse
+    $completePurchaseResponse = $completePurchaseRequest->send();
 
     /**
      * Handle payment completion
-     * Your app should provide a callback taking the CompletePurchaseResponse instance as the parameter
+     * Your app should provide a `callable` taking the CompletePurchaseResponse instance as the parameter
      * You app can call $response->getData() to get all data sent from CPP
      * complete() will send the correct HTTP headers for CPP to complete/fail payment and redirect your site
      */
-    $completePurchaseResponse->complete( $callback );
 
-    /**
-     * @var Symfony\Component\HttpFoundation\Response;
-     */
+    $callback = function(CompletePurchaseResponse $response) {
+        /**
+        * process payment completion in your app
+        * the callback can:
+        * return true on success (resulting in a 200)
+        * return false on failure (resulting in a 503)
+        * or throw an UnprocessableEntityException to return a HTTP 422 to the CPP
+        */
+    };
+
+    // @var Symfony\Component\HttpFoundation\Response;
+    $response = $completePurchaseResponse->complete( $callback );
+
+    // send the response
     $response = $complete->send();
 
 } catch (CompletePurchaseRequestException $e) {

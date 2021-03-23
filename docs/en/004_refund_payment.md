@@ -14,58 +14,47 @@ The validation requirements for refunding a payment are:
 
 Refunds should be actioned from a secure backend administration area in your application, the scope of which is not covered by this module.
 
-If you are using the Silverstripe CPP module provided by NSWDPC Digital, this can be done from the Payments administration area.
+If you are using the Silverstripe CPP module provided by NSWDPC Digital, this can be done from the CPP administration area.
 
 ## Example
 
 ```php
 use Omnipay\Omnipay;
-use Omnipay\NSWGOVCPP\AccessToken;
+use Omnipay\NSWGOVCPP\AccessTokenRequestException;
 use Omnipay\NSWGOVCPP\Gateway;
 use Omnipay\NSWGOVCPP\ParameterStorage;
-use Omnipay\NSWGOVCPP\AccessTokenRequestException;
 use Omnipay\NSWGOVCPP\RefundRequestException;
+use Omnipay\NSWGOVCPP\RefundRequest;
+use Omnipay\NSWGOVCPP\RefundResponse;
 
 try {
 
     $refundAmount = $myApp->getRefundAmount();// mandatory
     $refundReason = $myApp->getRefundReason();// optional
+    $paymentReference = $myApp->getPaymentReference();// mandatory
 
     $config = [
         'clientId' => 'your-client-id',
         'clientSecret' => 'your-client-secret',
-        'refundUrl' => 'https://auth.example.com/accesstoken'
+        'refundUrl' => 'https://payment.example.com/refund'
     ];
     $parameters = ParameterStorage::setAll($config);
 
-    // Setup CPP payment gateway
+    // Setup CPP payment gateway - it will draw the parameters from ParameterStorage automatically
+    // @var Omnipay\NSWGOVCPP\Gateway
     $gateway = Omnipay::create( Gateway::class );
 
-    // get an access token
-    $accessTokenRequest = $this->gateway->authorize();
-    $accessTokenResponse = $accessTokenRequest->send();
-
-    /**
-     * @var AccessToken
-     */
-    $accessToken = $accessTokenResponse->getAccessToken();
-
-    /**
-     * Send refund request
-     * If the refund request fails a RefundRequestException will be thrown
-     * If not the $refundResponse represents the response to a successful refund request
-     */
+    // @var Omnipay\NSWGOVCPP\RefundRequest
     $refundRequest = $gateway->refund([
-        'accessToken' => $accessToken,/* @var AccessToken */
+        'paymentReference' => $paymentReference,
         'refundAmount' => $refundAmount,
         'refundReason' => $refundReason
     ]);
 
+    // @var Omnipay\NSWGOVCPP\RefundResponse
     $refundResponse = $refundRequest->send();
 
-    /**
-     * @var string
-     */
+    // @var string
     $refundReference = $refundResponse->getRefundReference();
 
     // handle successful refund response using the reference
