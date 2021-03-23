@@ -9,17 +9,33 @@ namespace Omnipay\NSWGOVCPP;
  */
 trait NeedsAccessTokenTrait {
 
+    /**
+     * @var AccessToken
+     */
+    protected $accessToken;
+
     protected function getOAuth2GrantType() {
         return 'client_credentials';
     }
 
     /**
-     * @TODO implement session/server based saving of access token
-     * Check if the current token has expired, if so, return false
+     * @TODO implement session/server cache based saving of access token
      * @return mixed false when the token has expired, an AccessTokenResponse if not
      */
     public function getCurrentAccessToken() {
+        if($this->accessToken && $this->accessToken->isValid()) {
+            return $this->accessToken;
+        }
         return false;
+    }
+
+    /**
+     * Setter for accessToken. This can be used by tests to set a mock access token
+     * @param AccessToken a valid access token
+     */
+    public function setCurrentAccessToken(AccessToken $accessToken) {
+        $this->accessToken = $accessToken;
+        return $this;
     }
 
     /**
@@ -34,7 +50,7 @@ trait NeedsAccessTokenTrait {
         ];
 
         $accessToken = $this->getCurrentAccessToken();/* @var AccessToken|false */
-        if(!$accessToken || $accessToken->isExpired()) {
+        if(!$accessToken || !$accessToken->isValid()) {
             $url = $this->getAccessTokenUrl();
             if(!$url) {
                 throw new AccessTokenRequestException("The accessTokenUrl is invalid");
@@ -47,13 +63,12 @@ trait NeedsAccessTokenTrait {
                 ],
                 $payload
             );
-            $accessToken = new AccessToken(
+            $this->accessToken = $accessToken = new AccessToken(
                 isset($result['access_token']) ? $result['access_token'] : '',
                 isset($result['expires']) ? $result['expires'] : '',
                 isset($result['token_type']) ? $result['token_type'] : ''
             );
         }
-
         return $accessToken;
     }
 }
