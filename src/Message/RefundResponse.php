@@ -6,14 +6,14 @@ use Omnipay\NSWGOVCPP\RefundRequestException;
 use Omnipay\Common\Message\AbstractResponse;
 
 /**
- * Represents a response to VoidRequest
+ * Represents a response to RefundRequest
  * @author James
  */
 class RefundResponse extends AbstractResponse
 {
 
     /**
-     * Returns the access token in this response as a string
+     * Returns the refund reference in this response as a string
      */
     public function __toString() : string
     {
@@ -33,7 +33,7 @@ class RefundResponse extends AbstractResponse
     }
 
     /**
-     * Return whether the {@link NSWDPC\Payments\CPP\RefundRequest} was successful
+     * Return whether the {@link Omnipay\NSWGOVCPP\RefundRequest} was successful
      */
     public function isSuccessful() : bool
     {
