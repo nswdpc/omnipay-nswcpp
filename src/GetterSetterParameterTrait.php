@@ -118,4 +118,30 @@ trait GetterSetterParameterTrait
     {
         return $this->getParameter('paymentReference');
     }
+
+    /**
+     * Set the status URL used to retrieve transaction status
+     */
+    public function setStatusUrl($statusUrl)
+    {
+        $this->setParameter('statusUrl', $statusUrl);
+        return $this;
+    }
+
+    /**
+     * @note the URL is in the format
+     * https://api-psm.g.testservicensw.net/cpp-digital/api/payments/{{CPP-Reference}}/status
+     * The paymentReference must be passed in for the str_replace to occur
+     */
+    public function getStatusUrl()
+    {
+        $url = $this->getParameter('statusUrl');
+        $paymentReference = $this->getPaymentReference();
+        if (!$paymentReference) {
+            throw new \Exception("Internal error: the paymentReference was not provided");
+        }
+        $url = str_replace("/{{paymentReference}}/", "/{$paymentReference}/", $url);
+        return $url;
+    }
+
 }
