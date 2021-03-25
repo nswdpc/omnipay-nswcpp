@@ -6,6 +6,7 @@ use Omnipay\Common\AbstractGateway;
 use Omnipay\NSWGOVCPP\AccessTokenRequest;
 use Omnipay\NSWGOVCPP\CompleteAccessTokenRequest;
 use Omnipay\NSWGOVCPP\CompletePurchaseRequest;
+use Omnipay\NSWGOVCPP\FetchTransactionRequest;
 use Omnipay\NSWGOVCPP\RefundRequest;
 
 /**
@@ -48,6 +49,15 @@ class Gateway extends AbstractGateway
     public function completePurchase(array $parameters = [])
     {
         return $this->createRequest(CompletePurchaseRequest::class, $parameters);
+    }
+
+    /**
+     * Fetch a transaction, get its status
+     * @return Omnipay\NSWGOVCPP\FetchTransactionRequest
+     */
+    public function fetchTransaction(array $parameters = [])
+    {
+        return $this->createRequest(FetchTransactionRequest::class, $parameters);
     }
 
     /**
