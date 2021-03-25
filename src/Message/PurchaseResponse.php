@@ -39,7 +39,7 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
     }
 
     /**
-     * Return whether the {@link NSWDPC\Payments\CPP\CompleteAccessTokenRequest} was successful
+     * Return whether the {@link Omnipay\NSWGOVCPP\CompleteAccessTokenRequest} was successful
      */
     public function isSuccessful() : bool
     {

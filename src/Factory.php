@@ -14,7 +14,7 @@ class Factory
 {
 
     /**
-     * Create a new instance of {@link NSWDPC\Payments\CPP\Gateway} and return it
+     * Create a new instance of {@link Omnipay\NSWGOVCPP\Gateway} and return it
      * @param ParameterStorage $parameterStorage
      */
     public function create(ParameterStorage $parameterStorage) : Gateway

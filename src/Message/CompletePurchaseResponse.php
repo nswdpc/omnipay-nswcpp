@@ -78,7 +78,7 @@ class CompletePurchaseResponse extends AbstractResponse implements NotificationI
     }
 
     /**
-     * Return whether the {@link NSWDPC\Payments\CPP\CompletePurchaseRequest} was successful
+     * Return whether the {@link Omnipay\NSWGOVCPP\CompletePurchaseRequest} was successful
      * This validates the existence of common data in the JWT payload
      * @throws CompletePurchaseRequestException
      */
