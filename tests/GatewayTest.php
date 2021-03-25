@@ -93,6 +93,9 @@ class GatewayTest extends GatewayTestCase
         return $this->jwt;
     }
 
+    protected $refundUrl = 'https://api-psm.g.testservicensw.net/cpp-digital/api/payments/{{paymentReference}}/refund';
+    protected $statusUrl = 'https://api-psm.g.testservicensw.net/cpp-digital/api/payments/{{paymentReference}}/status';
+
     /**
      * Default Parameters used on the gateway
      */
@@ -105,7 +108,8 @@ class GatewayTest extends GatewayTestCase
             'accessTokenUrl' => 'https://localhost/accesstoken',
             'requestPaymentUrl' => 'https://localhost/paymentrequest',
             'gatewayUrl' => 'https://localhost/gateway',
-            'refundUrl' => 'https://localhost/refund',
+            'refundUrl' => $this->refundUrl,
+            'statusUrl' => $this->statusUrl,
             'paymentReference' => 'here-be-monsters' // this is required for base Omnipay tests
         ];
     }
@@ -270,6 +274,13 @@ class GatewayTest extends GatewayTestCase
         $this->assertEquals($refundAmount, $data['amount']);
         $this->assertEquals($refundReason, $data['refundReason']);
 
+        // check status URL
+        $refundUrl = $refundRequest->getRefundUrl();
+        $this->assertEquals(
+            str_replace("/{{paymentReference}}/", "/{$paymentReference}/", $this->refundUrl),
+            $refundUrl // the URL returned from the request
+        );
+
         // validate response
         $refundResponse = $refundRequest->send();
         $this->assertInstanceOf(RefundResponse::class, $refundResponse);
@@ -277,5 +288,44 @@ class GatewayTest extends GatewayTestCase
         // validate refundResponse
         $refundReference = $refundResponse->getRefundReference();
         $this->assertEquals("it_be_received", $refundReference);
+    }
+
+    /**
+     * Request a refund and validate the response
+     */
+    public function testDoCppPaymentStatus()
+    {
+
+        // refund requires an access token
+        $accessToken = $this->getAccessToken();
+
+        // perform a refund
+        $this->setMockHttpResponse('PaymentStatusRequestSuccess.response');
+
+        $paymentReference = 'here-be-monsters';
+        $fetchTransactionRequest = $this->gateway->fetchTransaction([
+            'paymentReference' => $paymentReference
+        ]);
+        $this->assertInstanceOf(FetchTransactionRequest::class, $fetchTransactionRequest);
+        $fetchTransactionRequest->setCurrentAccessToken($accessToken);
+
+        // validate data
+        $data = $fetchTransactionRequest->getData();
+        $this->assertEmpty($data);
+
+        // check status URL
+        $statusUrl = $fetchTransactionRequest->getStatusUrl();
+        $this->assertEquals(
+            str_replace("/{{paymentReference}}/", "/{$paymentReference}/", $this->statusUrl),
+            $statusUrl // the URL returned from the request
+        );
+
+        // validate response
+        $fetchTransactionResponse = $fetchTransactionRequest->send();
+        $this->assertInstanceOf(FetchTransactionResponse::class, $fetchTransactionResponse);
+
+        // validate refundResponse
+        $paymentStatus = $fetchTransactionResponse->getPaymentStatus();
+        $this->assertEquals("COMPLETED", $paymentStatus);
     }
 }
