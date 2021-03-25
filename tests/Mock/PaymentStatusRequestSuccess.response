@@ -3,7 +3,7 @@ Content-Type: application/json; charset=utf-8
 
 {
     "paymentReference": "here-be-monsters",
-    "paymentStatus": "COMPLETED"
+    "paymentStatus": "COMPLETED",
     "referenceNumber": "",
     "agencyCompletionPayment": {
         "paymentMethod": "CARD",

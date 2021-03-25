@@ -35,4 +35,30 @@ abstract class AbstractAgencyRequest extends AbstractRequest
         }
         throw new \Exception("Invalid response from POST request to {$url}");
     }
+
+    /**
+      * @param string $url
+      * @param array $headers
+      * @param array $data
+      * @return mixed
+      * @throws \Exception|\JsonException
+      */
+    final protected function doGetRequest(string $url, array $headers = [])
+    {
+        $default_headers = [
+            'Accept' => "application/json",
+            'User-Agent' => "NSWDPC/CPP-Client (Omnipay)"
+        ];
+        $headers = array_merge($default_headers, $headers);
+        $response = $this->httpClient->request(
+            "GET",
+            $url,
+            $headers
+        );
+        if ($response instanceof ResponseInterface) {
+            $data = json_decode($response->getBody(), true, JSON_THROW_ON_ERROR);
+            return $data;
+        }
+        throw new \Exception("Invalid response from GET request to {$url}");
+    }
 }

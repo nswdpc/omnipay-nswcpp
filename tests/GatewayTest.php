@@ -17,6 +17,8 @@ use Omnipay\NSWGOVCPP\PurchaseRequest;
 use Omnipay\NSWGOVCPP\PurchaseResponse;
 use Omnipay\NSWGOVCPP\RefundRequest;
 use Omnipay\NSWGOVCPP\RefundResponse;
+use Omnipay\NSWGOVCPP\FetchTransactionRequest;
+use Omnipay\NSWGOVCPP\FetchTransactionResponse;
 use Omnipay\NSWGOVCPP\RefundRequestException;
 use Omnipay\NSWGOVCPP\UnprocessableEntityException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -291,7 +293,7 @@ class GatewayTest extends GatewayTestCase
     }
 
     /**
-     * Request a refund and validate the response
+     * Test the payment status handling
      */
     public function testDoCppPaymentStatus()
     {

@@ -16,6 +16,13 @@ class FetchTransactionRequest extends AbstractAgencyRequest
     use NeedsAccessTokenTrait;
 
     /**
+     * This request has no data to send
+     */
+    public function getData() {
+        return [];
+    }
+
+    /**
      * To perform a payment status request, an access token is required
      * @param array $data
      * @throws FetchTransactionRequestException
@@ -43,10 +50,9 @@ class FetchTransactionRequest extends AbstractAgencyRequest
             );
         }
 
-        $result = $this->doPostRequest(
+        $result = $this->doGetRequest(
             $url,
             $headers = [
-                'Content-Type' => 'application/json',
                 'Authorization' => "Bearer " . $accessToken->getToken(),
             ],
             $data
