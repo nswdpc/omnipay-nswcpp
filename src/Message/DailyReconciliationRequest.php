@@ -64,13 +64,12 @@ class DailyReconciliationRequest extends AbstractAgencyRequest
         if ($accessToken->isExpired()) {
             throw new DailyReconciliationRequestException(
                 "The access token for the reconciliation request is expired, request a new one",
-                AccessTokenResponse::EXPIRED
+                AccessToken::EXPIRED
             );
         }
 
         // process the text/csv results
         try {
-            \NSWDPC\Payments\NSWGOVCPP\Agency\Logger::log("sending request");
             // send the request
             $output = $this->doGetRequest(
                 $url,
@@ -82,7 +81,6 @@ class DailyReconciliationRequest extends AbstractAgencyRequest
             );
         } catch (\Exception $e) {
             $output = false;
-            \NSWDPC\Payments\NSWGOVCPP\Agency\Logger::log( $e->getMessage() );
         }
         $data = [
             'reconciliationReport' => $output

@@ -6,6 +6,6 @@ namespace Omnipay\NSWGOVCPP;
  * Specific exception thrown when a payment completion request cannot be completed
  * @author James
  */
-class PaymentCompleteException extends \Exception
+class PaymentCompletionException extends \Exception
 {
 }

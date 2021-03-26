@@ -46,7 +46,7 @@ class FetchTransactionRequest extends AbstractAgencyRequest
         if ($accessToken->isExpired()) {
             throw new FetchTransactionRequestException(
                 "The access token for the payment status request is expired, request a new one",
-                AccessTokenResponse::EXPIRED
+                AccessToken::EXPIRED
             );
         }
 

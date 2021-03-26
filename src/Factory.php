@@ -2,6 +2,7 @@
 
 namespace Omnipay\NSWGOVCPP;
 
+use Omnipay\NSWGOVCPP\Gateway as CustomerPaymentsPlatformGateway;
 use Omnipay\Omnipay;
 
 /**

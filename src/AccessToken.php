@@ -8,6 +8,8 @@ namespace Omnipay\NSWGOVCPP;
 class AccessToken
 {
 
+    const EXPIRED = 'accesstoken-expired';
+
     /**
      * @var string
      */

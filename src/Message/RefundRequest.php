@@ -82,7 +82,7 @@ class RefundRequest extends AbstractAgencyRequest
         if ($accessToken->isExpired()) {
             throw new RefundRequestException(
                 "The access token for the refund request is expired, request a new one",
-                AccessTokenResponse::EXPIRED
+                AccessToken::EXPIRED
             );
         }
 
