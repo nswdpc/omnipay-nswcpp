@@ -55,7 +55,7 @@ class FetchTransactionRequest extends AbstractAgencyRequest
             $headers = [
                 'Authorization' => "Bearer " . $accessToken->getToken(),
             ],
-            $data
+            false
         );
         $response = new FetchTransactionResponse($this, $result);
         return $response;
