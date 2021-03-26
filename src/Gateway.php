@@ -7,6 +7,7 @@ use Omnipay\NSWGOVCPP\AccessTokenRequest;
 use Omnipay\NSWGOVCPP\CompleteAccessTokenRequest;
 use Omnipay\NSWGOVCPP\CompletePurchaseRequest;
 use Omnipay\NSWGOVCPP\FetchTransactionRequest;
+use Omnipay\NSWGOVCPP\DailyReconciliationRequest;
 use Omnipay\NSWGOVCPP\RefundRequest;
 
 /**
@@ -67,5 +68,10 @@ class Gateway extends AbstractGateway
     public function refund(array $parameters = [])
     {
         return $this->createRequest(RefundRequest::class, $parameters);
+    }
+
+    public function dailyReconciliation(array $parameters = [])
+    {
+        return $this->createRequest(DailyReconciliationRequest::class, $parameters);
     }
 }

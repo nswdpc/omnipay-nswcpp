@@ -144,4 +144,14 @@ trait GetterSetterParameterTrait
         return $url;
     }
 
+    public function setDailyReconciliationUrl($url) {
+        $this->setParameter('dailyReconciliationUrl', $url);
+        return $this;
+    }
+
+    public function getDailyReconciliationUrl()
+    {
+        return $this->getParameter('dailyReconciliationUrl');
+    }
+
 }
