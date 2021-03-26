@@ -39,7 +39,7 @@ try {
         'requestPaymentUrl' => 'https://payments.example.com/paymentrequest',
         'gatewayUrl' => 'https://gateway.example.com/'
     ];
-    $parameters = ParameterStorage::setAll($config);
+    ParameterStorage::setAll($config);
 
     // Setup CPP payment gateway - it will draw the parameters from ParameterStorage automatically
     // @var Omnipay\NSWGOVCPP\Gateway

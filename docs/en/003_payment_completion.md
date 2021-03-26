@@ -48,7 +48,7 @@ try {
         'jwtPublicKey' => 'jwt-public-key'
     ];
 
-    $parameters = ParameterStorage::setAll($config);
+    ParameterStorage::setAll($config);
 
     // Setup CPP payment gateway - it will draw the parameters from ParameterStorage automatically// @var //// // //////////////// @var Omnipay\NSWGOVCPP\Gateway
     $gateway = Omnipay::create( Gateway::class );

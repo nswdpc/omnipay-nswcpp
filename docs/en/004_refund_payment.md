@@ -38,7 +38,7 @@ try {
         'clientSecret' => 'your-client-secret',
         'refundUrl' => 'https://payment.example.com/refund'
     ];
-    $parameters = ParameterStorage::setAll($config);
+    ParameterStorage::setAll($config);
 
     // Setup CPP payment gateway - it will draw the parameters from ParameterStorage automatically
     // @var Omnipay\NSWGOVCPP\Gateway
