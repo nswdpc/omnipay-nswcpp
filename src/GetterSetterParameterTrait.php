@@ -104,7 +104,7 @@ trait GetterSetterParameterTrait
         if (!$paymentReference) {
             throw new \Exception("Internal error: the paymentReference was not provided");
         }
-        $url = str_replace("/{{paymentReference}}/", "/{$paymentReference}/", $url);
+        $url = str_replace("{{paymentReference}}", urlencode($paymentReference), $url);
         return $url;
     }
 
@@ -140,7 +140,7 @@ trait GetterSetterParameterTrait
         if (!$paymentReference) {
             throw new \Exception("Internal error: the paymentReference was not provided");
         }
-        $url = str_replace("/{{paymentReference}}/", "/{$paymentReference}/", $url);
+        $url = str_replace("{{paymentReference}}", urlencode($paymentReference), $url);
         return $url;
     }
 
