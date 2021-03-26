@@ -39,11 +39,11 @@ abstract class AbstractAgencyRequest extends AbstractRequest
     /**
       * @param string $url
       * @param array $headers
-      * @param array $data
+      * @param bool $raw when true, return the response body
       * @return mixed
       * @throws \Exception|\JsonException
       */
-    final protected function doGetRequest(string $url, array $headers = [])
+    final protected function doGetRequest(string $url, array $headers = [], $raw = false)
     {
         $default_headers = [
             'Accept' => "application/json",
@@ -56,8 +56,12 @@ abstract class AbstractAgencyRequest extends AbstractRequest
             $headers
         );
         if ($response instanceof ResponseInterface) {
-            $data = json_decode($response->getBody(), true, JSON_THROW_ON_ERROR);
-            return $data;
+            if($raw) {
+                $output = $response->getBody()->__toString();
+            } else {
+                $output = json_decode($response->getBody(), true, JSON_THROW_ON_ERROR);
+            }
+            return $output;
         }
         throw new \Exception("Invalid response from GET request to {$url}");
     }
