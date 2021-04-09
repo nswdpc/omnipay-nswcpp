@@ -116,4 +116,4 @@ try {
 }
 ```
 
-Read next: [Payment completion](./003_payment_competion.md)
+Read next: [Payment completion](./003_payment_completion.md)
