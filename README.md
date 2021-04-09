@@ -1,5 +1,7 @@
 ## Omnipay gateway for the NSW Government Customer Payments Platform
 
+> ⚠️ This module is a WIP. Do not use it in production as the API will change.
+
 A platform-agnostic PHP module providing a gateway for the [Omnipay Multi-gateway payment processing library](https://omnipay.thephpleague.com/) that can be used to take payments from citizens.
 
 More information for NSW Government agencies [can be found on the CPP resource page](https://cpp-info-hub.service.nsw.gov.au/). It is assumed that you have an approved agency account prior to using this module.
@@ -9,6 +11,10 @@ More information for NSW Government agencies [can be found on the CPP resource p
 Installing the `nswdpc/silverstripe-nsw-customerpaymentsplatform` module will install this package, providing a NSW Government agency a frontend to take payments.
 
 Please follow the configuration instructions in that module for configuration and setup.
+
+## Documentation
+
+[Step-by-step documentation is available](./docs/en/001_index.md) including authorisation, payment requests, payment completion handling and refund handling.
 
 ## Maintainers
 
