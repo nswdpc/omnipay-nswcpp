@@ -79,11 +79,16 @@ class PurchaseRequest extends AbstractAgencyRequest
             throw new PurchaseRequestException("Invalid access token");
         }
 
+        $token = $accessToken->getToken();
+        if (empty($token)) {
+            throw new PurchaseRequestException("Empty access token");
+        }
+
         $result = $this->doPostRequest(
             $url,
             $headers = [
                 'Content-Type' => 'application/json',
-                'Authorization' => "Bearer " . $accessToken->getToken(),
+                'Authorization' => "Bearer " . $token,
             ],
             $data
         );
