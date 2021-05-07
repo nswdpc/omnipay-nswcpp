@@ -92,6 +92,12 @@ class PurchaseRequest extends AbstractAgencyRequest
             ],
             $data
         );
+
+        if(isset($result['fault'])) {
+            $faultstring = $result['fault']['faultstring'] ?: 'not supplied';
+            throw new PurchaseRequestException("Response contained fault: {$faultstring}");
+        }
+
         $response = new PurchaseResponse($this, $result);
         return $response;
     }
