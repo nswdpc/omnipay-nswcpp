@@ -24,8 +24,11 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
      */
     public function isDuplicate()
     {
-        if (empty($this->data) || !array_key_exists('duplicate', $this->data)) {
+        if (empty($this->data)) {
             throw new PurchaseRequestException("You cannot call isDuplicate() when the response data is not available");
+        }
+        if(!array_key_exists('duplicate', $this->data)) {
+            throw new PurchaseRequestException("The expected key 'duplicate' does not exist in the response data");
         }
         return $this->data['duplicate'] ? true : false;
     }
