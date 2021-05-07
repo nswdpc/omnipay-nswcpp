@@ -60,6 +60,7 @@ trait NeedsAccessTokenTrait
             if (!$url) {
                 throw new AccessTokenRequestException("The accessTokenUrl is invalid");
             }
+
             // the token is set currently set or has expired
             $result = $this->doPostRequest(
                 $url,
@@ -68,6 +69,13 @@ trait NeedsAccessTokenTrait
                 ],
                 $payload
             );
+
+            if(isset($result['error'])) {
+                $error = $result['error'] ?: '';
+                $description = $result['error_description'] ?: '';
+                throw new AccessTokenRequestException("Response contained error: {$error}/{$description}");
+            }
+
             $this->accessToken = $accessToken = new AccessToken(
                 isset($result['access_token']) ? $result['access_token'] : '',
                 isset($result['expires']) ? $result['expires'] : '',
