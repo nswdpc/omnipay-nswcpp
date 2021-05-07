@@ -65,7 +65,7 @@ trait NeedsAccessTokenTrait
             $result = $this->doPostRequest(
                 $url,
                 $headers = [
-                    'Content-Type' => 'application/json',
+                    'Content-Type' => 'application/x-www-form-urlencoded',
                 ],
                 $payload
             );
