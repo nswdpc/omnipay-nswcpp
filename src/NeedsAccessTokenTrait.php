@@ -21,15 +21,16 @@ trait NeedsAccessTokenTrait
     }
 
     /**
-     * @TODO implement session/server cache based saving of access token
-     * @return mixed false when the token has expired, an AccessTokenResponse if not
+     * Get the current AccessToken
+     * @return AccessToken|null
      */
     public function getCurrentAccessToken()
     {
         if ($this->accessToken && $this->accessToken->isValid()) {
             return $this->accessToken;
+        } else {
+            return null;
         }
-        return false;
     }
 
     /**
@@ -44,8 +45,9 @@ trait NeedsAccessTokenTrait
 
     /**
      * Retrieve and access token for authentication
+     * @return AccessToken|false
      */
-    public function retrieveAccessToken() : AccessToken
+    public function retrieveAccessToken()
     {
         $this->validate('clientId', 'clientSecret', 'accessTokenUrl');
         $payload = [
@@ -76,11 +78,14 @@ trait NeedsAccessTokenTrait
                 throw new AccessTokenRequestException("Response contained error: {$error}/{$description}");
             }
 
-            $this->accessToken = $accessToken = new AccessToken(
+            // Access Token, expiring from current timestamp
+            $accessToken = new AccessToken(
                 isset($result['access_token']) ? $result['access_token'] : '',
-                isset($result['expires']) ? $result['expires'] : '',
+                isset($result['expires_in']) ? intval($result['expires_in']) : 0,
                 isset($result['token_type']) ? $result['token_type'] : ''
             );
+            $this->setCurrentAccessToken( $accessToken );
+
         }
         return $accessToken;
     }
