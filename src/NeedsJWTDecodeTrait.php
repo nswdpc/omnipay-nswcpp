@@ -32,7 +32,7 @@ trait NeedsJWTDecodeTrait
      * JWT Algos available for decoding token
      * @var array
      */
-    public $jwtAlgos = ['RS256'];
+    public $jwtAlgos = ['HS256','RS256'];
 
     /**
      * Set the JWT sent from the CPP system
