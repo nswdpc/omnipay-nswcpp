@@ -58,7 +58,7 @@ trait NeedsJWTDecodeTrait
      * @return array
      * @throws JWTDecodeException
      */
-    public function validateJWT($force = false) : array
+    public function decodeJWT($force = false) : array
     {
         // if already validated
         if ($this->jwtValidated && !$force) {
