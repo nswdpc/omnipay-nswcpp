@@ -110,15 +110,18 @@ class CompletePurchaseResponse extends AbstractResponse implements NotificationI
 
     /**
      * Complete the payment completion processing
-     * The application should provide a callback that returns a boolean or
+     * The application can provide a callback that returns a boolean
+     * If provided, it will be used to determine the HTTP response code
      */
-    public function complete(callable $callback) : Response
+    public function complete(callable $callback = null) : Response
     {
         try {
             // check for validate common payment data
             $this->hasValidBaseData();
             // verify via the callable provided by the application
-            if ($result = $callback($this)) {
+            if(!$callback) {
+                $this->code = Response::HTTP_OK;
+            } else if($result = $callback($this)) {
                 // All OK
                 $this->code = Response::HTTP_OK;
             } else {
