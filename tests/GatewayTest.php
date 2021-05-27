@@ -242,10 +242,11 @@ class GatewayTest extends GatewayTestCase
 
         $this->assertInstanceOf(Response::class, $response);
 
-        $response->send();
-        $contents = ob_get_contents();
-
         $this->assertEquals(200, $response->getStatusCode());
+
+        $data = $completePurchaseResponse->getData();
+
+        $this->assertEquals((array)$payload, $data);
     }
 
     /**
