@@ -41,64 +41,14 @@ class CompletePurchaseRequest extends AbstractAgencyRequest
     }
 
     /**
-     * Validate and returns the JWT payload
+     * Validate, decode and return the JWT payload as the data for the CompletePurchaseResponse
      * @return array
      * @throws JWTDecodeException
      */
     public function getData() : array
     {
-        $this->validateJWT();
+        $this->decodeJWT();
         return $this->jwtPayload;
-    }
-
-    /**
-     * Catch any errors in the send process in order to return the correct
-     * HTTP response code immediately without further processing
-     *
-     * @return ResponseInterface
-     */
-    public function send()
-    {
-        try {
-            // send the request, decode JWT, use payload to complete payment
-            return parent::send();
-        } catch (JWTDecodeException $e) {
-            // Specific JWT decode error
-            // This is generally a 50x error code
-            $code = $e->getCode();
-        } catch (UnprocessableEntityException $e) {
-            // this exception will always trigger a 422
-            $code = Response::HTTP_UNPROCESSABLE_ENTITY;
-        } catch (\Exception $e) {
-            // default HTTP code for errors is 503
-            $code = Response::HTTP_SERVICE_UNAVAILABLE;
-        }
-
-        // Error condition handling
-        // sanity check on the HTTP error code
-        $code = intval($code);
-        if ($code < 400 || $code > 599) {
-            // ensure we use a sane 50x error code if the code provided
-            // would tell the CPP incorrect information
-            $code = Response::HTTP_SERVICE_UNAVAILABLE;
-        }
-
-        // create the response
-        $response = new Response(
-            'An error occurred',
-            $code,
-            [
-                'content-type' => 'text/html'
-            ]
-        );
-        $response->send();
-
-        if ($this->getExitOnError()) {
-            // exit to avoid modules interfering with this response
-            exit;
-        } else {
-            return $response;
-        }
     }
 
     /**
