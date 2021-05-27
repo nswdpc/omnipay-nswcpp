@@ -11,7 +11,5 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class JWTDecodeException extends UnprocessableEntityException
 {
-    public function getCode() {
-        return Response::HTTP_UNPROCESSABLE_ENTITY;
-    }
+    protected $code = Response::HTTP_UNPROCESSABLE_ENTITY;
 }
