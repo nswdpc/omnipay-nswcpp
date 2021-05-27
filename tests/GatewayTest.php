@@ -242,10 +242,10 @@ class GatewayTest extends GatewayTestCase
 
         $this->assertInstanceOf(Response::class, $response);
 
-        ob_start();
         $response->send();
         $contents = ob_get_contents();
-        ob_end_clean();
+
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     /**
